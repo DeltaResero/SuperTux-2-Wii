@@ -158,6 +158,14 @@ public:
     return drawing_effect;
   }
 
+  /** Turn every other tile of a repeated straight path around, so a long run
+      of road isn't the same 32 pixel picture over and over. Only a worldmap
+      asks for this; a level's tiles are laid the way the author drew them. */
+  void set_alternate_straights(bool enable)
+  {
+    alternate_straights = enable;
+  }
+
   /**
    * Start fading the tilemap to opacity given by @c alpha.
    * Destination opacity will be reached after @c seconds seconds. Also influences solidity.
@@ -199,6 +207,11 @@ private:
   bool effective_solid;
   void update_effective_solid();
 
+  /** Which way round to draw the piece at this square, so that a run of the
+      same straight alternates instead of repeating. NO_EFFECT for everything
+      else. */
+  DrawingEffect straight_turned(int x, int y) const;
+
   float speed_x;
   float speed_y;
   int width, height;
@@ -207,6 +220,7 @@ private:
   Vector movement; /**< The movement that happened last frame */
 
   DrawingEffect drawing_effect;
+  bool alternate_straights; /**< turn every other tile of a repeated straight path around */
   float alpha; /**< requested tilemap opacity */
   float current_alpha; /**< current tilemap opacity */
   float remaining_fade_time; /**< seconds until requested tilemap opacity is reached */

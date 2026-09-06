@@ -296,7 +296,9 @@ WorldMap::load(const std::string& filename)
       auto iter = sector.get_iter();
       while(iter.next()) {
         if(iter.get_key() == "tilemap") {
-          add_object(std::make_shared<TileMap>(tileset, iter.as_mapping()));
+          auto tilemap = std::make_shared<TileMap>(tileset, iter.as_mapping());
+          tilemap->set_alternate_straights(true);
+          add_object(tilemap);
         } else if(iter.get_key() == "background") {
           add_object(std::make_shared<Background>(iter.as_mapping()));
         } else if(iter.get_key() == "music") {
