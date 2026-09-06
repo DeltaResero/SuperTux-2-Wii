@@ -48,6 +48,7 @@ TileMap::TileMap(std::shared_ptr<const TileSet> new_tileset) :
   offset(Vector(0,0)),
   movement(0,0),
   drawing_effect(NO_EFFECT),
+  alternate_straights(false),
   alpha(1.0),
   current_alpha(1.0),
   remaining_fade_time(0),
@@ -74,6 +75,7 @@ TileMap::TileMap(std::shared_ptr<const TileSet> tileset_, const ReaderMapping& r
   offset(Vector(0,0)),
   movement(Vector(0,0)),
   drawing_effect(NO_EFFECT),
+  alternate_straights(false),
   alpha(1.0),
   current_alpha(1.0),
   remaining_fade_time(0),
@@ -216,6 +218,39 @@ TileMap::update(float elapsed_time)
   }
 }
 
+DrawingEffect
+TileMap::straight_turned(int x, int y) const
+{
+  if(!alternate_straights) return NO_EFFECT;
+
+  const uint32_t id = get_tile_id(x, y);
+  if(id == 0) return NO_EFFECT;
+
+  const Tile* tile = tileset->get(id);
+  if(tile == NULL) return NO_EFFECT;
+
+  /* A straight is the only piece a path lays end to end, so it is the only
+     one whose picture repeats. A turn, or the end of a bridge, is drawn the
+     way round it was meant to be. */
+  const int dirs = tile->getData() & Tile::WORLDMAP_DIR_MASK;
+
+  /* Turning a piece round is only right where the same piece carries on, so
+     a run of one is left alone and a bridge keeps its ends. */
+  if(dirs == (Tile::WORLDMAP_EAST | Tile::WORLDMAP_WEST))
+  {
+    if(get_tile_id(x - 1, y) != id && get_tile_id(x + 1, y) != id) return NO_EFFECT;
+    return (x & 1) ? HORIZONTAL_FLIP : NO_EFFECT;
+  }
+
+  if(dirs == (Tile::WORLDMAP_NORTH | Tile::WORLDMAP_SOUTH))
+  {
+    if(get_tile_id(x, y - 1) != id && get_tile_id(x, y + 1) != id) return NO_EFFECT;
+    return (y & 1) ? VERTICAL_FLIP : NO_EFFECT;
+  }
+
+  return NO_EFFECT;
+}
+
 void
 TileMap::draw(DrawingContext& context)
 {
@@ -260,13 +295,12 @@ TileMap::draw(DrawingContext& context)
         assert (index >= 0);
         assert (index < (width * height));
 
-        //uint32_t tile_id = tiles[index];
-        tileset->draw_tile(context, tiles[index], pos, z_pos, current_tint);
-        /*if (tiles[index] == 0) continue;
-        const Tile* tile = tileset->get(tiles[index]);
-        assert(tile != 0);
+        const DrawingEffect turn = straight_turned(tx, ty);
+        if(turn != NO_EFFECT) context.set_drawing_effect(drawing_effect ^ turn);
 
-        tile->draw(context, pos, z_pos, current_tint);*/
+        tileset->draw_tile(context, tiles[index], pos, z_pos, current_tint);
+
+        if(turn != NO_EFFECT) context.set_drawing_effect(drawing_effect);
       } /* for (pos y) */
     } /* for (pos x) */
 
