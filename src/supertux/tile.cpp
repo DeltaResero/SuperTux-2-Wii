@@ -45,7 +45,7 @@ Tile::Tile(const std::vector<ImageSpec>& imagespecs_,
   imagespecs(imagespecs_),
   images(),
   attributes(attributes_),
-  data(data_),
+  data(static_cast<int>(data_)),
   fps(fps_),
   object_name(obj_name),
   object_data(obj_data)

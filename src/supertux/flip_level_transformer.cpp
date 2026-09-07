@@ -81,7 +81,7 @@ DrawingEffect
 FlipLevelTransformer::transform_drawing_effect(DrawingEffect effect)
 {
   if (effect & VERTICAL_FLIP) {
-    return effect & ~VERTICAL_FLIP;
+    return effect & ~static_cast<DrawingEffect>(VERTICAL_FLIP);
   } else {
     return effect | VERTICAL_FLIP;
   }

@@ -42,7 +42,7 @@ Levelset::get_num_levels() const
 std::string
 Levelset::get_level_filename(int i) const
 {
-  return m_levels[i];
+  return m_levels[static_cast<size_t>(i)];
 }
 
 void
