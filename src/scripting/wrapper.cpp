@@ -1091,7 +1091,7 @@ static SQInteger FloatingImage_get_action_wrapper(HSQUIRRELVM vm)
   try {
     std::string return_value = _this->get_action();
 
-    sq_pushstring(vm, return_value.c_str(), return_value.size());
+    sq_pushstring(vm, return_value.c_str(), static_cast<SQInteger>(return_value.size()));
     return 1;
 
   } catch(std::exception& e) {
@@ -1230,7 +1230,7 @@ static SQInteger Gradient_get_direction_wrapper(HSQUIRRELVM vm)
   try {
     std::string return_value = _this->get_direction();
 
-    sq_pushstring(vm, return_value.c_str(), return_value.size());
+    sq_pushstring(vm, return_value.c_str(), static_cast<SQInteger>(return_value.size()));
     return 1;
 
   } catch(std::exception& e) {
@@ -2491,7 +2491,7 @@ static SQInteger ScriptedObject_get_action_wrapper(HSQUIRRELVM vm)
   try {
     std::string return_value = _this->get_action();
 
-    sq_pushstring(vm, return_value.c_str(), return_value.size());
+    sq_pushstring(vm, return_value.c_str(), static_cast<SQInteger>(return_value.size()));
     return 1;
 
   } catch(std::exception& e) {
@@ -2950,7 +2950,7 @@ static SQInteger ScriptedObject_get_name_wrapper(HSQUIRRELVM vm)
   try {
     std::string return_value = _this->get_name();
 
-    sq_pushstring(vm, return_value.c_str(), return_value.size());
+    sq_pushstring(vm, return_value.c_str(), static_cast<SQInteger>(return_value.size()));
     return 1;
 
   } catch(std::exception& e) {
