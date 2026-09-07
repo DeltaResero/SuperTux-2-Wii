@@ -95,12 +95,16 @@ OggSoundFile::read(void* _buffer, size_t buffer_size)
     long bytesRead
       = ov_read(&vorbis_file, buffer, bytes_to_read, bigendian,
                 2, 1, &section);
-    if(bytesRead == 0) {
+    /* Zero ends the stream and anything below it is an error code, never a
+       length. */
+    if(bytesRead <= 0) {
       break;
     }
-    buffer_size    -= bytesRead;
-    buffer         += bytesRead;
-    totalBytesRead += bytesRead;
+
+    const size_t bytes = static_cast<size_t>(bytesRead);
+    buffer_size    -= bytes;
+    buffer         += bytes;
+    totalBytesRead += bytes;
   }
 
   return totalBytesRead;
