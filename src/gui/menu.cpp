@@ -594,7 +594,11 @@ int Menu::get_active_item_id() const
 void
 Menu::event(const SDL_Event& ev)
 {
-  active_row().event(ev);
+  /* Not an early return: the mouse handling below is what can give a menu an
+     active row in the first place. */
+  if (has_active_item())
+    active_row().event(ev);
+
   switch(ev.type) {
     case SDL_MOUSEBUTTONDOWN:
     if(ev.button.button == SDL_BUTTON_LEFT)
