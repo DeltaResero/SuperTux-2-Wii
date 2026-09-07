@@ -586,11 +586,6 @@ Menu::get_item_by_id(int id) const
   throw std::runtime_error("MenuItem not found");
 }
 
-int Menu::get_active_item_id() const
-{
-  return active_row().id;
-}
-
 void
 Menu::event(const SDL_Event& ev)
 {
