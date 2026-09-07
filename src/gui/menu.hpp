@@ -68,7 +68,7 @@ public:
 
   MenuItem& get_item(int index)
   {
-    return *(items[index]);
+    return *(items[static_cast<size_t>(index)]);
   }
 
   MenuItem& get_item_by_id(int id);
@@ -127,6 +127,11 @@ private:
       nothing selectable in it, which an empty menu always is. */
   bool has_active_item() const
   { return active_item >= 0 && active_item < static_cast<int>(items.size()); }
+
+  /** The row active_item names, which only means anything while
+      has_active_item() holds. */
+  MenuItem& active_row() const
+  { return *items[static_cast<size_t>(active_item)]; }
 
 private:
   // position of the menu (ie. center of the menu, not top/left)

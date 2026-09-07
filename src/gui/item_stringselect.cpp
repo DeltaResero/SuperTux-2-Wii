@@ -100,7 +100,7 @@ ItemStringSelect::draw(DrawingContext& context, Vector pos, int menu_width, floa
                        LAYER_GUI);
   /* Centred rather than pushed against one arrow, so a short value does not
      sit at one end of the column with a hole beside it. */
-  context.draw_text(Resources::normal_font, list[*selected],
+  context.draw_text(Resources::normal_font, list[static_cast<size_t>(*selected)],
                     Vector(pos.x + centre, pos.y - int(Resources::normal_font->get_height()/2)),
                     ALIGN_CENTER, LAYER_GUI, active ? ColorScheme::Menu::active_color : get_color());
 }

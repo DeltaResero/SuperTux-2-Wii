@@ -121,7 +121,7 @@ MenuItem*
 Menu::add_item(std::unique_ptr<MenuItem> new_item, int pos_)
 {
   items.insert(items.begin()+pos_,std::move(new_item));
-  MenuItem* item = items[pos_].get();
+  MenuItem* item = items[static_cast<size_t>(pos_)].get();
 
   /* When the item is inserted before the selected item, the
    * same menu item should be still selected.
@@ -151,7 +151,7 @@ Menu::delete_item(int pos_)
         --active_item;
       else
         active_item = int(items.size())-1;
-    } while (has_active_item() && items[active_item]->skippable());
+    } while (has_active_item() && active_row().skippable());
   }
 }
 
@@ -321,7 +321,7 @@ Menu::process_action(MenuAction menuaction)
           --active_item;
         else
           active_item = int(items.size())-1;
-      } while (items[active_item]->skippable()
+      } while (active_row().skippable()
                && (active_item != last_active_item));
       break;
 
@@ -331,7 +331,7 @@ Menu::process_action(MenuAction menuaction)
           ++active_item;
         else
           active_item = 0;
-      } while (items[active_item]->skippable()
+      } while (active_row().skippable()
                && (active_item != last_active_item));
       break;
 
@@ -349,14 +349,14 @@ Menu::process_action(MenuAction menuaction)
   if (!has_active_item())
     return;
 
-  if (items[active_item]->no_other_action()) {
-    items[active_item]->process_action(menuaction);
+  if (active_row().no_other_action()) {
+    active_row().process_action(menuaction);
     return;
   }
 
-  items[active_item]->process_action(menuaction);
+  active_row().process_action(menuaction);
   if(menuaction == MENU_ACTION_HIT) {
-    menu_action(items[active_item].get());
+    menu_action(&active_row());
   }
 
 }
@@ -367,7 +367,7 @@ Menu::draw_item(DrawingContext& context, int index)
   float menu_height = get_height();
   float menu_width  = get_width();
 
-  MenuItem* pitem = items[index].get();
+  MenuItem* pitem = items[static_cast<size_t>(index)].get();
 
   float x_pos       = pos.x - menu_width/2;
   float y_pos       = pos.y + 24*index - menu_height/2 + 12;
@@ -454,7 +454,7 @@ Menu::hover_at(const Vector& mouse_pos)
       = static_cast<int> ((y - (pos.y - get_height()/2)) / 24);
 
     /* only change the mouse focus to a selectable item */
-    if (!items[new_active_item]->skippable())
+    if (!items[static_cast<size_t>(new_active_item)]->skippable())
       active_item = new_active_item;
 
     if(MouseCursor::current())
@@ -518,10 +518,10 @@ Menu::place_on_screen()
 void
 Menu::draw(DrawingContext& context)
 {
-  if (has_active_item() && !items[active_item]->help.empty())
+  if (has_active_item() && !active_row().help.empty())
   {
-    int text_width  = (int) Resources::normal_font->get_text_width(items[active_item]->help);
-    int text_height = (int) Resources::normal_font->get_text_height(items[active_item]->help);
+    int text_width  = (int) Resources::normal_font->get_text_width(active_row().help);
+    int text_height = (int) Resources::normal_font->get_text_height(active_row().help);
 
     /* The box hangs below the menu it belongs to, rather than sitting at a
        place on the screen chosen without reference to it. A menu is as tall as
@@ -547,12 +547,12 @@ Menu::draw(DrawingContext& context)
                              16.0f,
                              LAYER_GUI-10);
 
-    context.draw_text(Resources::normal_font, items[active_item]->help,
+    context.draw_text(Resources::normal_font, active_row().help,
                       Vector(pos.x, inner_top + HELP_PAD_Y),
                       ALIGN_CENTER, LAYER_GUI);
   }
 
-  for(unsigned int i = 0; i < items.size(); ++i)
+  for(int i = 0; i < static_cast<int>(items.size()); ++i)
   {
     draw_item(context, i);
   }
@@ -588,13 +588,13 @@ Menu::get_item_by_id(int id) const
 
 int Menu::get_active_item_id() const
 {
-  return items[active_item]->id;
+  return active_row().id;
 }
 
 void
 Menu::event(const SDL_Event& ev)
 {
-  items[active_item]->event(ev);
+  active_row().event(ev);
   switch(ev.type) {
     case SDL_MOUSEBUTTONDOWN:
     if(ev.button.button == SDL_BUTTON_LEFT)
@@ -612,7 +612,7 @@ Menu::event(const SDL_Event& ev)
       {
         /* Ask the item what was pressed, since one drawn with an arrow at
            either end means different things at different places along it. */
-        const MenuAction action = items[active_item]->get_click_action(
+        const MenuAction action = active_row().get_click_action(
           x - (pos.x - menu_width/2), static_cast<int>(menu_width),
           get_value_width());
 

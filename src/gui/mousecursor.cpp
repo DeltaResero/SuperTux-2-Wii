@@ -81,7 +81,7 @@ void MouseCursor::draw(DrawingContext& context)
       tmp_state = MC_CLICK;
     }
 
-    context.draw_surface(m_cursor[static_cast<int>(tmp_state)],
+    context.draw_surface(m_cursor[static_cast<size_t>(tmp_state)],
                          Vector(x - m_mid_x, y - m_mid_y),
                          LAYER_GUI + 100);
 

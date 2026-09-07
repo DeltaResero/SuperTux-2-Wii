@@ -159,7 +159,7 @@ ContribMenu::menu_action(MenuItem* item)
   {
     // reload the World so that we have something that we can safely
     // std::move() around without wreaking the ContribMenu
-    std::unique_ptr<World> world = World::load(m_contrib_worlds[index]->get_basedir());
+    std::unique_ptr<World> world = World::load(m_contrib_worlds[static_cast<size_t>(index)]->get_basedir());
     if (!world->is_levelset())
     {
       GameManager::current()->start_worldmap(std::move(world));
