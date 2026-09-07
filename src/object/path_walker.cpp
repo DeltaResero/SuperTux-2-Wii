@@ -96,11 +96,16 @@ PathWalker::goto_node(int node_no)
 {
   if (path->mode == Path::UNORDERED && running) return;
   if (node_no == stop_at_node_nr) return;
+
+  /* A script names the node, so it can name one the path has not got. */
+  if (node_no < 0 || static_cast<size_t>(node_no) >= path->nodes.size())
+    return;
+
   running = true;
   stop_at_node_nr = node_no;
 
   if (path->mode == Path::UNORDERED) {
-    next_node_nr = node_no;
+    next_node_nr = static_cast<size_t>(node_no);
   }
 }
 
