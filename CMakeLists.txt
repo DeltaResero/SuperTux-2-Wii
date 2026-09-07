@@ -386,7 +386,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   IF(WARNINGS)
     # temporarily disabled:
     #   -Wsign-conversion -Wfloat-equal -Wconversion -Wundef -Wswitch-default
-    #   -Wswitch-enum -Wsign-promo -Wcast-qual -Woverloaded-virtual -Wmissing-format-attribute
+    #   -Wswitch-enum -Wcast-qual -Woverloaded-virtual -Wmissing-format-attribute
     #   -Wold-style-cast -Wpadded -Wabi -Winline -Wunsafe-loop-optimizations -Wstrict-overflow=5
     # fails on MinGW:
     #   -ansi
@@ -397,7 +397,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
       -Wdisabled-optimization -Winit-self -Winvalid-pch -Wmissing-include-dirs
       -Wmissing-noreturn -Wpacked -Wredundant-decls -Wstack-protector
       -Wformat=2 -Weffc++ -Wctor-dtor-privacy -Wshadow -Wnon-virtual-dtor
-      -Wcast-qual)
+      -Wcast-qual -Wsign-promo)
   ENDIF(WARNINGS)
 endif()
 
