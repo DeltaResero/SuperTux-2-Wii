@@ -287,7 +287,7 @@ SDLPainter::draw_filled_rect(SDL_Renderer* renderer, const DrawingRequest& reque
 
     // rounded top and bottom parts
     std::vector<SDL_Rect> rects;
-    rects.reserve(2*slices + 1);
+    rects.reserve(static_cast<size_t>(2*slices + 1));
     for(int i = 0; i < slices; ++i)
     {
       float p = (static_cast<float>(i) + 0.5f) / static_cast<float>(slices);

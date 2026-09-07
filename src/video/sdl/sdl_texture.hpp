@@ -32,8 +32,8 @@ class SDLTexture : public Texture
 {
 protected:
   SDL_Texture* m_texture;
-  int m_width;
-  int m_height;
+  unsigned int m_width;
+  unsigned int m_height;
 
 public:
   SDLTexture(SDL_Surface* sdlsurface);

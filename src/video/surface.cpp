@@ -48,7 +48,8 @@ Surface::Surface(const std::string& file) :
 {
   if(texture)
   {
-    rect = Rect(0, 0, Size(texture->get_image_width(), texture->get_image_height()));
+    rect = Rect(0, 0, Size(static_cast<int>(texture->get_image_width()),
+                           static_cast<int>(texture->get_image_height())));
     surface_data = VideoSystem::current()->new_surface_data(*this);
     return;
   }
@@ -87,8 +88,8 @@ Surface::Surface(TexturePtr texture_) :
   cells(),
   surface_data(),
   rect(0, 0,
-      Size(texture->get_image_width(),
-           texture->get_image_height())),
+      Size(static_cast<int>(texture->get_image_width()),
+           static_cast<int>(texture->get_image_height()))),
   flipx(false)
 {
   surface_data = VideoSystem::current()->new_surface_data(*this);

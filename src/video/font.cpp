@@ -201,7 +201,7 @@ Font::loadFontSurface(
       Glyph glyph;
       glyph.surface_idx   = surface_idx;
 
-      if( glyph_width_ == FIXED || (*chr <= 255 && isdigit(*chr)) )
+      if( glyph_width_ == FIXED || (*chr <= 255 && isdigit(static_cast<int>(*chr))) )
       {
         glyph.rect    = Rectf(x, y, x + char_width, y + char_height);
         glyph.offset  = Vector(0, 0);
@@ -303,7 +303,7 @@ Font::get_text_width(const std::string& text) const
 float
 Font::get_text_height(const std::string& text) const
 {
-  std::string::size_type text_height = char_height;
+  int text_height = char_height;
 
   for(std::string::const_iterator it = text.begin(); it != text.end(); ++it)
   { // since UTF8 multibyte characters are decoded with values
@@ -333,10 +333,11 @@ Font::wrap_to_chars(const std::string& s, int line_length, std::string* overflow
 
   // if we can find a whitespace character to break at, return text up to this character
   int i = line_length;
-  while ((i > 0) && (s[i] != ' ')) i--;
+  while ((i > 0) && (s[static_cast<size_t>(i)] != ' ')) i--;
   if (i > 0) {
-    if (overflow) *overflow = s.substr(i+1);
-    return s.substr(0, i);
+    const size_t brk = static_cast<size_t>(i);
+    if (overflow) *overflow = s.substr(brk + 1);
+    return s.substr(0, brk);
   }
 
   // FIXME: wrap at line_length, taking care of multibyte characters
@@ -356,12 +357,13 @@ Font::wrap_to_width(const std::string& s_, float width, std::string* overflow)
   }
 
   // if we can find a whitespace character to break at, return text up to this character
-  for (int i = s.length()-1; i >= 0; i--) {
-    std::string s2 = s.substr(0,i);
-    if (s[i] != ' ') continue;
+  for (int i = static_cast<int>(s.length())-1; i >= 0; i--) {
+    const size_t brk = static_cast<size_t>(i);
+    std::string s2 = s.substr(0, brk);
+    if (s[brk] != ' ') continue;
     if (get_text_width(s2) <= width) {
-      if (overflow) *overflow = s.substr(i+1);
-      return s.substr(0, i);
+      if (overflow) *overflow = s.substr(brk + 1);
+      return s.substr(0, brk);
     }
   }
 
@@ -456,7 +458,8 @@ Font::draw_chars(Renderer *renderer, bool notshadow, const std::string& text,
       SurfacePartRequest surfacepartrequest;
       surfacepartrequest.srcrect = glyph.rect;
       surfacepartrequest.dstsize = glyph.rect.get_size();
-      surfacepartrequest.surface = notshadow ? glyph_surfaces[glyph.surface_idx].get() : shadow_surfaces[glyph.surface_idx].get();
+      const size_t idx = static_cast<size_t>(glyph.surface_idx);
+      surfacepartrequest.surface = notshadow ? glyph_surfaces[idx].get() : shadow_surfaces[idx].get();
 
       request.request_data = &surfacepartrequest;
       renderer->draw_surface_part(request);

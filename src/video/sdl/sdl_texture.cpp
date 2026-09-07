@@ -47,8 +47,10 @@ SDLTexture::SDLTexture(SDL_Surface* image) :
     throw std::runtime_error(msg.str());
   }
 
-  m_width = image->w;
-  m_height = image->h;
+  /* SDL states a surface's size as a signed number, though a surface never has
+     a negative side. Cross over once here rather than at every use. */
+  m_width = static_cast<unsigned int>(image->w);
+  m_height = static_cast<unsigned int>(image->h);
 }
 
 SDLTexture::~SDLTexture()
