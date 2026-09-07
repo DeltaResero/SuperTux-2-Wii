@@ -45,11 +45,11 @@ TileSet::TileSet(const std::string& filename) :
     int last = -1;
     for(int i = 0; i < int(m_tiles.size()); ++i)
     {
-      if (m_tiles[i] == 0 && last == -1)
+      if (m_tiles[static_cast<size_t>(i)] == 0 && last == -1)
       {
         last = i;
       }
-      else if (m_tiles[i] && last != -1)
+      else if (m_tiles[static_cast<size_t>(i)] && last != -1)
       {
         log_info << "Free Tile IDs (" << i - last << "): " << last << " - " << i-1 << std::endl;
         last = -1;
@@ -63,9 +63,9 @@ TileSet::TileSet(const std::string& filename) :
     log_debug << "Tileset in " << filename << std::endl;
     for(int i = 0; i < int(m_tiles.size()); ++i)
     {
-      if(m_tiles[i] != 0)
+      if(m_tiles[static_cast<size_t>(i)] != 0)
       {
-        m_tiles[i]->print_debug(i);
+        m_tiles[static_cast<size_t>(i)]->print_debug(i);
       }
     }
   }
@@ -78,10 +78,10 @@ TileSet::~TileSet()
 }
 
 void
-TileSet::add_tile(int id, std::unique_ptr<Tile> tile)
+TileSet::add_tile(uint32_t id, std::unique_ptr<Tile> tile)
 {
-  if (id >= static_cast<int>(m_tiles.size())) {
-    m_tiles.resize(id + 1);
+  if (id >= m_tiles.size()) {
+    m_tiles.resize(static_cast<size_t>(id) + 1);
   }
 
   if (m_tiles[id] != 0) {

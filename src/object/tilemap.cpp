@@ -298,7 +298,7 @@ TileMap::draw(DrawingContext& context)
         const DrawingEffect turn = straight_turned(tx, ty);
         if(turn != NO_EFFECT) context.set_drawing_effect(drawing_effect ^ turn);
 
-        tileset->draw_tile(context, tiles[index], pos, z_pos, current_tint);
+        tileset->draw_tile(context, tiles[static_cast<size_t>(index)], pos, z_pos, current_tint);
 
         if(turn != NO_EFFECT) context.set_drawing_effect(drawing_effect);
       } /* for (pos y) */
@@ -318,8 +318,8 @@ TileMap::draw(DrawingContext& context)
         assert (index >= 0);
         assert (index < (width * height));
 
-        if (tiles[index] == 0) continue;
-        const Tile* tile = tileset->get(tiles[index]);
+        if (tiles[static_cast<size_t>(index)] == 0) continue;
+        const Tile* tile = tileset->get(tiles[static_cast<size_t>(index)]);
         if (!tile) continue;
 
         SurfacePtr image = tile->get_current_image();
@@ -339,8 +339,8 @@ TileMap::draw(DrawingContext& context)
         assert (index >= 0);
         assert (index < (width * height));
 
-        if (tiles[index] == 0) continue;
-        const Tile* tile = tileset->get(tiles[index]);
+        if (tiles[static_cast<size_t>(index)] == 0) continue;
+        const Tile* tile = tileset->get(tiles[static_cast<size_t>(index)]);
         if (!tile) continue;
 
         SurfacePtr image = tile->get_current_image();
@@ -415,23 +415,23 @@ TileMap::resize(int new_width, int new_height, int fill_id)
     // remap tiles for new width
     for(int y = 0; y < height && y < new_height; ++y) {
       for(int x = 0; x < new_width; ++x) {
-        tiles[y * new_width + x] = tiles[y * width + x];
+        tiles[static_cast<size_t>(y * new_width + x)] = tiles[static_cast<size_t>(y * width + x)];
       }
     }
   }
 
-  tiles.resize(new_width * new_height, fill_id);
+  tiles.resize(static_cast<size_t>(new_width * new_height), static_cast<uint32_t>(fill_id));
 
   if(new_width > width) {
     // remap tiles
     for(int y = std::min(height, new_height)-1; y >= 0; --y) {
       for(int x = new_width-1; x >= 0; --x) {
         if(x >= width) {
-          tiles[y * new_width + x] = fill_id;
+          tiles[static_cast<size_t>(y * new_width + x)] = static_cast<uint32_t>(fill_id);
           continue;
         }
 
-        tiles[y * new_width + x] = tiles[y * width + x];
+        tiles[static_cast<size_t>(y * new_width + x)] = tiles[static_cast<size_t>(y * width + x)];
       }
     }
   }
@@ -468,7 +468,7 @@ TileMap::get_tile_id(int x, int y) const
     return 0;
   }
 
-  return tiles[y*width + x];
+  return tiles[static_cast<size_t>(y*width + x)];
 }
 
 const Tile*
@@ -496,7 +496,7 @@ void
 TileMap::change(int x, int y, uint32_t newtile)
 {
   assert(x >= 0 && x < width && y >= 0 && y < height);
-  tiles[y*width + x] = newtile;
+  tiles[static_cast<size_t>(y*width + x)] = newtile;
 }
 
 void

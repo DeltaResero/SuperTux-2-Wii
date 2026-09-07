@@ -46,7 +46,7 @@ public:
 
   void merge(const TileSet *tileset, uint32_t start, uint32_t end,
              uint32_t offset);
-  void add_tile(int id, std::unique_ptr<Tile> tile);
+  void add_tile(uint32_t id, std::unique_ptr<Tile> tile);
 
   void draw_tile(DrawingContext& context, uint32_t id, const Vector& pos,
                  int z_pos, Color color = Color(1, 1, 1)) const;

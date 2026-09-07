@@ -474,7 +474,7 @@ WrapperCreator::push_to_stack(const Type& type, const std::string& var)
         out << "sq_pushbool(vm, " << var << ");\n";
     } else if(type.atomic_type == StringType::instance()) {
         out << "sq_pushstring(vm, " << var << ".c_str(), "
-            << var << ".size());\n";
+            << "static_cast<SQInteger>(" << var << ".size()));\n";
     } else {
         std::ostringstream msg;
         msg << "Type '" << type.atomic_type->name << "' not supported yet.";

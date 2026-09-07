@@ -52,7 +52,7 @@ void load_squirrel_table(HSQUIRRELVM vm, SQInteger table_idx, const ReaderMappin
       continue;
     }
     // push the key
-    sq_pushstring(vm, key.c_str(), key.size());
+    sq_pushstring(vm, key.c_str(), static_cast<SQInteger>(key.size()));
 
     // push the value
     switch(value.get_type()) {

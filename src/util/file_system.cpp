@@ -195,11 +195,11 @@ std::string normalize(const std::string& filename)
       ++p;
     }
 
-    size_t len = p - pstart;
+    size_t len = static_cast<size_t>(p - pstart);
     if(len == 0)
       break;
 
-    std::string pathelem(pstart, p-pstart);
+    std::string pathelem(pstart, static_cast<size_t>(p-pstart));
     if(pathelem == ".")
       continue;
 

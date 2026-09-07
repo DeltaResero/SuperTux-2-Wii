@@ -420,12 +420,12 @@ OptionsMenu::menu_action(MenuItem* item)
 
     case MNID_ASPECTRATIO:
       {
-        if (aspect_ratios[next_aspect_ratio] == "auto")
+        if (aspect_ratios[static_cast<size_t>(next_aspect_ratio)] == "auto")
         {
           g_config->aspect_size = Size(0, 0); // Magic values
           apply_video_change();
         }
-        else if (sscanf(aspect_ratios[next_aspect_ratio].c_str(), "%d:%d",
+        else if (sscanf(aspect_ratios[static_cast<size_t>(next_aspect_ratio)].c_str(), "%d:%d",
                         &g_config->aspect_size.width, &g_config->aspect_size.height) == 2)
         {
           apply_video_change();
@@ -438,7 +438,7 @@ OptionsMenu::menu_action(MenuItem* item)
       break;
 
     case MNID_MAGNIFICATION:
-      if(sscanf(magnifications[next_magnification].c_str(), "%f", &g_config->magnification) == 1)
+      if(sscanf(magnifications[static_cast<size_t>(next_magnification)].c_str(), "%f", &g_config->magnification) == 1)
       {
         g_config->magnification /= 100.0f;
       }
@@ -452,26 +452,26 @@ OptionsMenu::menu_action(MenuItem* item)
         int refresh_rate;
         if (!g_config->use_fullscreen)
         {
-          if(sscanf(window_resolutions[next_window_resolution].c_str(), "%dx%d",
+          if(sscanf(window_resolutions[static_cast<size_t>(next_window_resolution)].c_str(), "%dx%d",
                     &width, &height) == 2)
           {
             g_config->window_size = Size(width, height);
           }
         }
-        else if (fullscreen_resolutions[next_fullscreen_resolution] == "Desktop")
+        else if (fullscreen_resolutions[static_cast<size_t>(next_fullscreen_resolution)] == "Desktop")
         {
           g_config->fullscreen_size.width = 0;
           g_config->fullscreen_size.height = 0;
           g_config->fullscreen_refresh_rate = 0;
         }
-        else if(sscanf(fullscreen_resolutions[next_fullscreen_resolution].c_str(),
+        else if(sscanf(fullscreen_resolutions[static_cast<size_t>(next_fullscreen_resolution)].c_str(),
                        "%dx%d@%d", &width, &height, &refresh_rate) == 3)
         {
           g_config->fullscreen_size.width = width;
           g_config->fullscreen_size.height = height;
           g_config->fullscreen_refresh_rate = refresh_rate;
         }
-        else if(sscanf(fullscreen_resolutions[next_fullscreen_resolution].c_str(),
+        else if(sscanf(fullscreen_resolutions[static_cast<size_t>(next_fullscreen_resolution)].c_str(),
                        "%dx%d", &width, &height) == 2)
         {
           g_config->fullscreen_size.width = width;

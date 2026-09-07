@@ -87,15 +87,15 @@ JoystickConfig::print_joystick_mappings() const
   std::cout << "Joystick Mappings" << std::endl;
   std::cout << "-----------------" << std::endl;
   for(const auto& i : joy_axis_map) {
-    std::cout << "Axis: " << i.first.second << " -> " << i.second << std::endl;
+    std::cout << "Axis: " << i.first.second << " -> " << static_cast<int>(i.second) << std::endl;
   }
 
   for(const auto& i : joy_button_map) {
-    std::cout << "Button: " << i.first.second << " -> " << i.second << std::endl;
+    std::cout << "Button: " << i.first.second << " -> " << static_cast<int>(i.second) << std::endl;
   }
 
   for(const auto& i : joy_hat_map) {
-    std::cout << "Hat: " << i.first.second << " -> " << i.second << std::endl;
+    std::cout << "Hat: " << i.first.second << " -> " << static_cast<int>(i.second) << std::endl;
   }
   std::cout << std::endl;
 }

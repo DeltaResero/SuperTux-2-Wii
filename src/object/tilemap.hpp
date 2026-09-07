@@ -71,10 +71,10 @@ public:
   void resize(int newwidth, int newheight, int fill_id = 0);
 
   size_t get_width() const
-  { return width; }
+  { return static_cast<size_t>(width); }
 
   size_t get_height() const
-  { return height; }
+  { return static_cast<size_t>(height); }
 
   Size get_size() const
   { return Size(width, height); }

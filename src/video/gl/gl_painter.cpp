@@ -256,9 +256,9 @@ GLPainter::draw_filled_rect(const DrawingRequest& request)
                 request.pos.x + fillrectrequest->size.x - radius,
                 request.pos.y + fillrectrequest->size.y - radius);
 
-    int n = 8;
-    int p = 0;
-    std::vector<float> vertices((n+1) * 4 * 2);
+    const int n = 8;
+    size_t p = 0;
+    std::vector<float> vertices(static_cast<size_t>((n+1) * 4 * 2));
 
     for(int i = 0; i <= n; ++i)
     {

@@ -244,7 +244,7 @@ Dialog::draw(DrawingContext& ctx)
                            LAYER_GUI-10);
     }
 
-    ctx.draw_text(Resources::normal_font, m_buttons[i].text,
+    ctx.draw_text(Resources::normal_font, m_buttons[static_cast<size_t>(i)].text,
                   Vector(pos.x, pos.y - int(Resources::normal_font->get_height()/2)),
                   ALIGN_CENTER, LAYER_GUI,
                   i == m_selected_button ? ColorScheme::Menu::active_color : ColorScheme::Menu::default_color);
@@ -254,9 +254,10 @@ Dialog::draw(DrawingContext& ctx)
 void
 Dialog::on_button_click(int button) const
 {
-  if (m_buttons[button].callback)
+  const Button& btn = m_buttons[static_cast<size_t>(button)];
+  if (btn.callback)
   {
-    m_buttons[button].callback();
+    btn.callback();
   }
   MenuManager::instance().set_dialog({});
 }

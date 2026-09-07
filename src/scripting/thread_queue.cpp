@@ -84,7 +84,7 @@ ThreadQueue::wakeup()
     i--;
   }
 
-  threads.erase(threads.begin(), threads.begin() + size_begin);
+  threads.erase(threads.begin(), threads.begin() + static_cast<ptrdiff_t>(size_begin));
 }
 
 }

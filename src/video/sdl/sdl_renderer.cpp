@@ -46,7 +46,7 @@ SDLRenderer::SDLRenderer() :
   int width  = g_config->window_size.width;
   int height = g_config->window_size.height;
 
-  int flags = SDL_WINDOW_RESIZABLE;
+  Uint32 flags = SDL_WINDOW_RESIZABLE;
   if(g_config->use_fullscreen)
   {
     if (g_config->fullscreen_size == Size(0, 0))
