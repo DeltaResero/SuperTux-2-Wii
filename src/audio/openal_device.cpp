@@ -137,7 +137,7 @@ OpenALDevice::create_source(const std::string& filename)
     log_debug << "Uncached sound \"" << filename << "\" requested to be played" << std::endl;
   }
 
-  alSourcei(source->source, AL_BUFFER, buffer);
+  alSourcei(source->source, AL_BUFFER, static_cast<ALint>(buffer));
   return source;
 }
 

@@ -111,7 +111,7 @@ WavSoundFile::WavSoundFile(const std::string& filename) :
   if(encoding != 1)
     throw SoundError("only PCM encoding supported");
   channels = read16LE(file);
-  rate = read32LE(file);
+  rate = static_cast<int>(read32LE(file));
   uint32_t byterate = read32LE(file);
   (void) byterate;
   uint16_t blockalign = read16LE(file);

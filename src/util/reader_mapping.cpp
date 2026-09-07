@@ -21,6 +21,7 @@
 
 #include <sexp/io.hpp>
 #include <sstream>
+#include <type_traits>
 #include <stdexcept>
 
 #include "util/reader_collection.hpp"
@@ -88,7 +89,7 @@ ReaderMapping::get_item(const char* key) const
   } else {                                                              \
     assert_array_size_eq(*m_doc, *sx, 2);                               \
     assert_##checker(*m_doc, sx->as_array()[1]);                        \
-    value = sx->as_array()[1].getter();                                 \
+    value = static_cast<std::remove_reference_t<decltype(value)>>(sx->as_array()[1].getter());                                 \
     return true;                                                        \
   }
 

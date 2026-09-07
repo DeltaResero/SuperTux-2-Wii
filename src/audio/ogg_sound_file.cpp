@@ -79,7 +79,7 @@ OggSoundFile::read(void* _buffer, size_t buffer_size)
 
     size_t bytes_to_read    = buffer_size;
     if(loop_at > 0) {
-      size_t      bytes_per_sample       = 2;
+      ogg_int64_t bytes_per_sample       = 2;
       ogg_int64_t time                   = ov_pcm_tell(&vorbis_file);
       ogg_int64_t samples_left_till_loop = loop_at - time;
       ogg_int64_t bytes_left_till_loop

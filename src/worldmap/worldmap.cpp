@@ -1000,13 +1000,13 @@ WorldMap::save_state()
     get_table_entry(vm, "state");
     get_or_create_table_entry(vm, "worlds");
 
-    sq_pushstring(vm, map_filename.c_str(), map_filename.length());
+    sq_pushstring(vm, map_filename.c_str(), static_cast<SQInteger>(map_filename.length()));
     if(SQ_FAILED(sq_deleteslot(vm, -2, SQFalse)))
     {
     }
 
     // construct new table for this worldmap
-    sq_pushstring(vm, map_filename.c_str(), map_filename.length());
+    sq_pushstring(vm, map_filename.c_str(), static_cast<SQInteger>(map_filename.length()));
     sq_newtable(vm);
 
     // store tux

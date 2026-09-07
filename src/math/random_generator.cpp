@@ -76,7 +76,7 @@ int RandomGenerator::srand(int x)    {
     printf("==== srand(%10d) (%10d) rand_max=%x =====\n",
            x, x0, RandomGenerator::rand_max);
 
-  RandomGenerator::srandom(x);
+  RandomGenerator::srandom(static_cast<unsigned long>(x));
   return x;                               // let caller know seed used
 }
 
@@ -350,7 +350,7 @@ void RandomGenerator::srandom(unsigned long x)
 {
   long i, lim;
 
-  state[0] = x;
+  state[0] = static_cast<long>(x);
   if (rand_type == TYPE_0)
     lim = NSHUFF;
   else

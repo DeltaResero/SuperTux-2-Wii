@@ -48,22 +48,22 @@ void TileMap::stop_moving()
 
 int TileMap::get_tile_id(int x, int y) const
 {
-  return tilemap->get_tile_id(x, y);
+  return static_cast<int>(tilemap->get_tile_id(x, y));
 }
 
 int TileMap::get_tile_id_at(float x, float y) const
 {
-  return tilemap->get_tile_id_at( Vector(x, y) );
+  return static_cast<int>(tilemap->get_tile_id_at( Vector(x, y) ));
 }
 
 void TileMap::change(int x, int y, int newtile)
 {
-  tilemap->change(x, y, newtile);
+  tilemap->change(x, y, static_cast<uint32_t>(newtile));
 }
 
 void TileMap::change_at(float x, float y, int newtile)
 {
-  tilemap->change_at(Vector(x, y), newtile);
+  tilemap->change_at(Vector(x, y), static_cast<uint32_t>(newtile));
 }
 
 void TileMap::fade(float alpha, float seconds)
