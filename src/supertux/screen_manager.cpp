@@ -65,8 +65,7 @@ ScreenManager::ScreenManager() :
   m_actions(),
   m_fps(0),
   m_screen_fade(),
-  m_screen_stack(),
-  m_screenshot_requested(false)
+  m_screen_stack()
 {
   using namespace scripting;
   TimeScheduler::instance = new TimeScheduler();
@@ -191,12 +190,6 @@ ScreenManager::draw(DrawingContext& context)
     draw_player_pos(context);
   }
 
-  // if a screenshot was requested, pass request on to drawing_context
-  if (m_screenshot_requested)
-  {
-    context.take_screenshot();
-    m_screenshot_requested = false;
-  }
   context.do_drawing();
 
   /* Calculate frames per second */
@@ -285,11 +278,6 @@ ScreenManager::process_events()
           g_config->use_fullscreen = !g_config->use_fullscreen;
           VideoSystem::current()->apply_config();
           m_menu_manager->on_window_resize();
-        }
-        else if (event.key.keysym.sym == SDLK_PRINTSCREEN ||
-                 event.key.keysym.sym == SDLK_F12)
-        {
-          take_screenshot();
         }
         else if (event.key.keysym.sym == SDLK_F2 &&
                  event.key.keysym.mod & KMOD_CTRL)
@@ -454,12 +442,6 @@ ScreenManager::run(DrawingContext &context)
 
     handle_screen_switch();
   }
-}
-
-void
-ScreenManager::take_screenshot()
-{
-  m_screenshot_requested = true;
 }
 
 /* EOF */
