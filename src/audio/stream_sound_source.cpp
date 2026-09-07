@@ -17,6 +17,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include <algorithm>
 #include <utility>
 
 #include "audio/sound_file.hpp"
@@ -54,9 +55,15 @@ StreamSoundSource::set_sound_file(std::unique_ptr<SoundFile> newfile)
 {
   file = std::move(newfile);
 
-  ALint queued;
+  ALint queued = 0;
   alGetSourcei(source, AL_BUFFERS_QUEUED, &queued);
-  for(size_t i = 0; i < STREAMFRAGMENTS - queued; ++i) {
+
+  /* A failed query leaves the count alone, so it need not fit the array. */
+  const size_t held = (queued > 0)
+                      ? std::min(static_cast<size_t>(queued), STREAMFRAGMENTS)
+                      : 0;
+
+  for(size_t i = 0; i < STREAMFRAGMENTS - held; ++i) {
     if(fillBufferAndQueue(buffers[i]) == false)
       break;
   }
