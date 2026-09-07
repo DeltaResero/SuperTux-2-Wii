@@ -151,7 +151,7 @@ Menu::delete_item(int pos_)
         --active_item;
       else
         active_item = int(items.size())-1;
-    } while (items[active_item]->skippable());
+    } while (has_active_item() && items[active_item]->skippable());
   }
 }
 
@@ -346,6 +346,9 @@ Menu::process_action(MenuAction menuaction)
       break;
   }
 
+  if (!has_active_item())
+    return;
+
   if (items[active_item]->no_other_action()) {
     items[active_item]->process_action(menuaction);
     return;
@@ -515,7 +518,7 @@ Menu::place_on_screen()
 void
 Menu::draw(DrawingContext& context)
 {
-  if (!items[active_item]->help.empty())
+  if (has_active_item() && !items[active_item]->help.empty())
   {
     int text_width  = (int) Resources::normal_font->get_text_width(items[active_item]->help);
     int text_height = (int) Resources::normal_font->get_text_height(items[active_item]->help);
@@ -601,7 +604,8 @@ Menu::event(const SDL_Event& ev)
       int y = int(mouse_pos.y);
 
       const float menu_width = get_width();
-      if(x > pos.x - menu_width/2 &&
+      if(has_active_item() &&
+         x > pos.x - menu_width/2 &&
          x < pos.x + menu_width/2 &&
          y > pos.y - get_height()/2 &&
          y < pos.y + get_height()/2)

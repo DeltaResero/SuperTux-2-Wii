@@ -123,6 +123,11 @@ private:
   void hover_at(const Vector& mouse_pos);
   void draw_item(DrawingContext& context, int index);
 
+  /** Whether active_item names a row that is there. It is -1 for a menu with
+      nothing selectable in it, which an empty menu always is. */
+  bool has_active_item() const
+  { return active_item >= 0 && active_item < static_cast<int>(items.size()); }
+
 private:
   // position of the menu (ie. center of the menu, not top/left)
   Vector pos;
