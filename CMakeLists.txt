@@ -375,11 +375,13 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   SET(CMAKE_CXX_FLAGS_PROFILE "-pg" CACHE STRING "Profile flags")
   SET(CMAKE_C_FLAGS_PROFILE "-pg" CACHE STRING "Profile flags")
   SET(CMAKE_LD_FLAGS_PROFILE "-lgmon" CACHE STRING "Profile flags")
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -funit-at-a-time")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -funit-at-a-time")
+
+  ## Warnings go on our own targets rather than into CMAKE_CXX_FLAGS, so that
+  ## vendored code under external/ is judged by its own build and not by ours.
+  SET(SUPERTUX2_WARNING_FLAGS -Wall -Wextra -Wno-unused-parameter)
   IF(WERROR)
-    ADD_DEFINITIONS(-Werror)
-  ELSE(WERROR)
-    REMOVE_DEFINITIONS(-Werror)
+    LIST(APPEND SUPERTUX2_WARNING_FLAGS -Werror)
   ENDIF(WERROR)
   IF(WARNINGS)
     # temporarily disabled:
@@ -390,7 +392,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     #   -ansi
     # fails on clang:
     #   -Wlogical-op -Wstrict-null-sentinel
-    SET(SUPERTUX2_EXTRA_WARNING_FLAGS "-fdiagnostics-show-option -pedantic -Wno-long-long -Wcast-align -Wdisabled-optimization -Winit-self -Winvalid-pch -Wmissing-include-dirs -Wmissing-noreturn -Wpacked -Wredundant-decls -Wstack-protector -Wformat=2 -Weffc++ -Wctor-dtor-privacy  -Wno-unused-parameter -Wshadow -Wnon-virtual-dtor -Wcast-qual")
+    LIST(APPEND SUPERTUX2_WARNING_FLAGS
+      -fdiagnostics-show-option -pedantic -Wno-long-long -Wcast-align
+      -Wdisabled-optimization -Winit-self -Winvalid-pch -Wmissing-include-dirs
+      -Wmissing-noreturn -Wpacked -Wredundant-decls -Wstack-protector
+      -Wformat=2 -Weffc++ -Wctor-dtor-privacy -Wshadow -Wnon-virtual-dtor
+      -Wcast-qual)
   ENDIF(WARNINGS)
 endif()
 
@@ -445,7 +452,8 @@ ENDIF(WIN32)
 target_link_libraries(supertux2 supertux2_lib)
 set_target_properties(supertux2 PROPERTIES OUTPUT_NAME supertux2-wii)
 set_target_properties(supertux2_lib PROPERTIES OUTPUT_NAME supertux2)
-set_target_properties(supertux2_lib PROPERTIES COMPILE_FLAGS "${SUPERTUX2_EXTRA_WARNING_FLAGS}")
+target_compile_options(supertux2_lib PRIVATE ${SUPERTUX2_WARNING_FLAGS})
+target_compile_options(supertux2 PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 
 IF(WIN32)
   ## Copy dlls on windows
@@ -503,7 +511,7 @@ if(BUILD_TESTS)
   # build SuperTux tests
   file(GLOB TEST_SUPERTUX_SOURCES tests/*.cpp)
   add_executable(test_supertux2 ${TEST_SUPERTUX_SOURCES})
-  target_compile_options(test_supertux2 PRIVATE ${WARNINGS_CXX_FLAGS})
+  target_compile_options(test_supertux2 PRIVATE ${SUPERTUX2_WARNING_FLAGS})
   target_link_libraries(test_supertux2
     gtest gtest_main
     supertux2_lib
