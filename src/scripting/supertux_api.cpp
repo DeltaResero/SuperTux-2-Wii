@@ -19,8 +19,8 @@
 #include <simplesquirrel/class.hpp>
 #include <simplesquirrel/table.hpp>
 
+#include "object/anchor_point.hpp"
 #include "scripting/ambient_sound.hpp"
-#include "scripting/anchor_points.hpp"
 #include "scripting/background.hpp"
 #include "scripting/camera.hpp"
 #include "scripting/candle.hpp"
@@ -65,15 +65,15 @@ register_supertux_api(HSQUIRRELVM v)
   ssq::Table root = root_table(v);
 
   /* Constants */
-  root.set("ANCHOR_TOP", ANCHOR_TOP);
-  root.set("ANCHOR_BOTTOM", ANCHOR_BOTTOM);
-  root.set("ANCHOR_LEFT", ANCHOR_LEFT);
-  root.set("ANCHOR_RIGHT", ANCHOR_RIGHT);
-  root.set("ANCHOR_MIDDLE", ANCHOR_MIDDLE);
-  root.set("ANCHOR_TOP_LEFT", ANCHOR_TOP_LEFT);
-  root.set("ANCHOR_TOP_RIGHT", ANCHOR_TOP_RIGHT);
-  root.set("ANCHOR_BOTTOM_LEFT", ANCHOR_BOTTOM_LEFT);
-  root.set("ANCHOR_BOTTOM_RIGHT", ANCHOR_BOTTOM_RIGHT);
+  root.set<int>("ANCHOR_TOP", ANCHOR_TOP);
+  root.set<int>("ANCHOR_BOTTOM", ANCHOR_BOTTOM);
+  root.set<int>("ANCHOR_LEFT", ANCHOR_LEFT);
+  root.set<int>("ANCHOR_RIGHT", ANCHOR_RIGHT);
+  root.set<int>("ANCHOR_MIDDLE", ANCHOR_MIDDLE);
+  root.set<int>("ANCHOR_TOP_LEFT", ANCHOR_TOP_LEFT);
+  root.set<int>("ANCHOR_TOP_RIGHT", ANCHOR_TOP_RIGHT);
+  root.set<int>("ANCHOR_BOTTOM_LEFT", ANCHOR_BOTTOM_LEFT);
+  root.set<int>("ANCHOR_BOTTOM_RIGHT", ANCHOR_BOTTOM_RIGHT);
 
   /* Global functions */
   root.addFunc("display", &display);
