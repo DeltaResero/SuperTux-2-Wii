@@ -20,20 +20,15 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_FUNCTIONS_HPP
 #define HEADER_SUPERTUX_SCRIPTING_FUNCTIONS_HPP
 
-#ifndef SCRIPTING_API
 #include <squirrel.h>
 #include <string>
-
-#define __suspend
-#define __custom(x)
-#endif
 
 namespace scripting {
 
 /**
  * Display the value of the argument. This is useful for inspecting tables.
  */
-SQInteger display(HSQUIRRELVM vm) __custom("t.");
+SQInteger display(HSQUIRRELVM vm);
 
 /**
  * Displays contents of the current stack
@@ -43,12 +38,12 @@ void print_stacktrace(HSQUIRRELVM vm);
 /**
  * returns the currently running thread
  */
-SQInteger get_current_thread(HSQUIRRELVM vm) __custom("t");
+SQInteger get_current_thread(HSQUIRRELVM vm);
 
 /**
  * Should use christmas mode
  */
-SQInteger is_christmas(HSQUIRRELVM vm) __custom("t");
+SQInteger is_christmas(HSQUIRRELVM vm);
 
 /**
  * Display a text file and scrolls it over the screen (on next screenswitch)

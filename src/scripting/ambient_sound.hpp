@@ -20,9 +20,7 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_AMBIENT_SOUND_HPP
 #define HEADER_SUPERTUX_SCRIPTING_AMBIENT_SOUND_HPP
 
-#ifndef SCRIPTING_API
 class AmbientSound;
-#endif
 
 #include <simplesquirrel/exposable_class.hpp>
 
@@ -30,7 +28,6 @@ namespace scripting {
 
 class AmbientSound : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::AmbientSound* m_parent;
 
@@ -41,7 +38,6 @@ public:
 private:
   AmbientSound(const AmbientSound&) = delete;
   AmbientSound& operator=(const AmbientSound&) = delete;
-#endif
 
 public:
   void set_pos(float x, float y);

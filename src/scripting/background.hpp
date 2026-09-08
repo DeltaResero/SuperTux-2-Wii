@@ -20,10 +20,8 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_BACKGROUND_HPP
 #define HEADER_SUPERTUX_SCRIPTING_BACKGROUND_HPP
 
-#ifndef SCRIPTING_API
 #include <string>
 class Background;
-#endif
 
 #include <simplesquirrel/exposable_class.hpp>
 
@@ -31,7 +29,6 @@ namespace scripting {
 
 class Background : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::Background* m_parent;
 
@@ -42,7 +39,6 @@ public:
 private:
   Background(const Background&) = delete;
   Background& operator=(const Background&) = delete;
-#endif
 
 public:
   void set_image(const std::string& image);

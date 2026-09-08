@@ -20,9 +20,7 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_PARTICLESYSTEM_HPP
 #define HEADER_SUPERTUX_SCRIPTING_PARTICLESYSTEM_HPP
 
-#ifndef SCRIPTING_API
 class ParticleSystem;
-#endif
 
 #include <simplesquirrel/exposable_class.hpp>
 
@@ -31,21 +29,17 @@ namespace scripting {
 class ParticleSystem : public ssq::ExposableClass
 {
 public:
-#ifndef SCRIPTING_API
   ParticleSystem(::ParticleSystem* parent);
   ~ParticleSystem();
-#endif
 
   void set_enabled(bool enable);
   bool get_enabled() const;
 
-#ifndef SCRIPTING_API
   ::ParticleSystem* particlesystem;
 
 private:
   ParticleSystem(const ParticleSystem&) = delete;
   ParticleSystem& operator=(const ParticleSystem&) = delete;
-#endif
 };
 
 }

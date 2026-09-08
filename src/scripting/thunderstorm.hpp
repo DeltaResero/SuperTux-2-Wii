@@ -20,9 +20,7 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_THUNDERSTORM_HPP
 #define HEADER_SUPERTUX_SCRIPTING_THUNDERSTORM_HPP
 
-#ifndef SCRIPTING_API
 class Thunderstorm;
-#endif
 
 #include <simplesquirrel/exposable_class.hpp>
 
@@ -31,10 +29,8 @@ namespace scripting {
 class Thunderstorm : public ssq::ExposableClass
 {
 public:
-#ifndef SCRIPTING_API
   Thunderstorm(::Thunderstorm* thunderstorm);
   ~Thunderstorm();
-#endif
 
   /**
    * Start playing thunder and lightning at configured interval
@@ -66,13 +62,11 @@ public:
    */
   void electrify();
 
-#ifndef SCRIPTING_API
   ::Thunderstorm* thunderstorm;
 
 private:
   Thunderstorm(const Thunderstorm&);
   Thunderstorm& operator=(const Thunderstorm&);
-#endif
 };
 
 }

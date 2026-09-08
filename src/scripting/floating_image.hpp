@@ -20,14 +20,12 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_FLOATING_IMAGE_HPP
 #define HEADER_SUPERTUX_SCRIPTING_FLOATING_IMAGE_HPP
 
-#ifndef SCRIPTING_API
 #include <memory>
 #include <string>
 
 #define HEADER_SUPERTUX_SCRIPTING_FLOATING_IMAGE_HPP
 
 class FloatingImage;
-#endif
 
 #include <simplesquirrel/exposable_class.hpp>
 
@@ -53,10 +51,8 @@ public:
   void fade_in(float fadetime);
   void fade_out(float fadetime);
 
-#ifndef SCRIPTING_API
 private:
   std::shared_ptr<::FloatingImage> floating_image;
-#endif
 };
 
 }

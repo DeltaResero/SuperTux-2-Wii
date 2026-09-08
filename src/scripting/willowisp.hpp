@@ -20,11 +20,9 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_WILLOWISP_HPP
 #define HEADER_SUPERTUX_SCRIPTING_WILLOWISP_HPP
 
-#ifndef SCRIPTING_API
 #include <string>
 
 class WillOWisp;
-#endif
 
 #include <simplesquirrel/exposable_class.hpp>
 
@@ -32,7 +30,6 @@ namespace scripting {
 
 class WillOWisp : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::WillOWisp* m_parent;
 
@@ -43,7 +40,6 @@ public:
 private:
   WillOWisp(const WillOWisp&) = delete;
   WillOWisp& operator=(const WillOWisp&) = delete;
-#endif
 
 public:
   /** Move willowisp to given node */
