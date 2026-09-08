@@ -24,9 +24,11 @@
 class AmbientSound;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class AmbientSound
+class AmbientSound : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

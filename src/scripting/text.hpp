@@ -26,9 +26,11 @@
 class TextObject;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class Text
+class Text : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

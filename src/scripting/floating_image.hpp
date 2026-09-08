@@ -29,9 +29,11 @@
 class FloatingImage;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class FloatingImage
+class FloatingImage : public ssq::ExposableClass
 {
 public:
   FloatingImage(const std::string& spritefile);

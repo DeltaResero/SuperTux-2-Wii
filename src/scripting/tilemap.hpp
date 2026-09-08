@@ -24,9 +24,11 @@
 class TileMap;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class TileMap
+class TileMap : public ssq::ExposableClass
 {
 public:
 #ifndef SCRIPTING_API

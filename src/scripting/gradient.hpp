@@ -25,9 +25,11 @@
 class Gradient;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class Gradient
+class Gradient : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

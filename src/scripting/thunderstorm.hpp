@@ -24,9 +24,11 @@
 class Thunderstorm;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class Thunderstorm
+class Thunderstorm : public ssq::ExposableClass
 {
 public:
 #ifndef SCRIPTING_API

@@ -26,9 +26,11 @@
 class ScriptedObject;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class ScriptedObject
+class ScriptedObject : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

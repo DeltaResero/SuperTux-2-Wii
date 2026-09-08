@@ -26,9 +26,11 @@
 class Camera;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class Camera
+class Camera : public ssq::ExposableClass
 {
 public:
 #ifndef SCRIPTING_API

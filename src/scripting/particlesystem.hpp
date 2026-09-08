@@ -24,9 +24,11 @@
 class ParticleSystem;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class ParticleSystem
+class ParticleSystem : public ssq::ExposableClass
 {
 public:
 #ifndef SCRIPTING_API

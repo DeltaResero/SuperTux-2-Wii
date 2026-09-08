@@ -25,9 +25,11 @@
 class Background;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class Background
+class Background : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

@@ -25,7 +25,7 @@
 #include <string>
 
 #include "scripting/squirrel_error.hpp"
-#include "scripting/wrapper.hpp"
+#include "scripting/supertux_api.hpp"
 
 namespace scripting {
 

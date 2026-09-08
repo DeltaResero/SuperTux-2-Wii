@@ -25,9 +25,11 @@
 class Sector;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class Sector
+class Sector : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

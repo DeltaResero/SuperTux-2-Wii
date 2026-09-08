@@ -24,9 +24,11 @@
 class Candle;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class Candle
+class Candle : public ssq::ExposableClass
 {
 public:
 #ifndef SCRIPTING_API

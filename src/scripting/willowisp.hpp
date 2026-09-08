@@ -26,9 +26,11 @@
 class WillOWisp;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class WillOWisp
+class WillOWisp : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

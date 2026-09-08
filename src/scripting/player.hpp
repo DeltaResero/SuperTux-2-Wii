@@ -26,9 +26,11 @@
 class Player;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class Player
+class Player : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

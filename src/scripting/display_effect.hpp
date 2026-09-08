@@ -24,9 +24,11 @@
 class DisplayEffect;
 #endif
 
+#include <simplesquirrel/exposable_class.hpp>
+
 namespace scripting {
 
-class DisplayEffect
+class DisplayEffect : public ssq::ExposableClass
 {
 #ifndef SCRIPTING_API
 private:

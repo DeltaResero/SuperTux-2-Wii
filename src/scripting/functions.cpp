@@ -69,14 +69,16 @@ SQInteger is_christmas(HSQUIRRELVM vm)
     return g_config->christmas_mode;
 }
 
-void wait(HSQUIRRELVM vm, float seconds)
+SQInteger wait(HSQUIRRELVM vm, float seconds)
 {
   TimeScheduler::instance->schedule_thread(vm, game_time + seconds);
+  return sq_suspendvm(vm);
 }
 
-void wait_for_screenswitch(HSQUIRRELVM vm)
+SQInteger wait_for_screenswitch(HSQUIRRELVM vm)
 {
   ScreenManager::current()->m_waiting_threads.add(vm);
+  return sq_suspendvm(vm);
 }
 
 void exit_screen()

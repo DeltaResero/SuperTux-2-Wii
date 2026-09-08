@@ -314,10 +314,6 @@ LIST(SORT SUPERTUX_SOURCES_C)
 LIST(SORT SUPERTUX_SOURCES_CXX)
 LIST(SORT SUPERTUX_RESOURCES)
 
-IF(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.cpp)
-  SET(SUPERTUX_SOURCES_CXX ${SUPERTUX_SOURCES_CXX} ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.cpp)
-ENDIF(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.cpp)
-
 ## Compile everything at once (roughly equivalent to cat *.cpp | gcc)
 
 OPTION(COMPILE_AMALGATION "Compile all the files together at once (experimental)" OFF)
