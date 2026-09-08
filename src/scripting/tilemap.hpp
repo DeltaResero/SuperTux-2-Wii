@@ -20,19 +20,17 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_TILEMAP_HPP
 #define HEADER_SUPERTUX_SCRIPTING_TILEMAP_HPP
 
-#ifndef SCRIPTING_API
 class TileMap;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class TileMap
+class TileMap : public ssq::ExposableClass
 {
 public:
-#ifndef SCRIPTING_API
   TileMap(::TileMap* tilemap);
   ~TileMap();
-#endif
 
   /** Move tilemap until at given node, then stop */
   void goto_node(int node_no);
@@ -77,13 +75,11 @@ public:
    */
   float get_alpha() const;
 
-#ifndef SCRIPTING_API
   ::TileMap* tilemap;
 
 private:
   TileMap(const TileMap&);
   TileMap& operator=(const TileMap&);
-#endif
 };
 
 }

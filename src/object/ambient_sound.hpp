@@ -74,9 +74,7 @@ public:
    * @name Scriptable Methods
    * @{
    */
-#ifndef SCRIPTING_API
   void set_pos(const Vector& pos);
-#endif
   void set_pos(float x, float y);
   float get_pos_x() const;
   float get_pos_y() const;

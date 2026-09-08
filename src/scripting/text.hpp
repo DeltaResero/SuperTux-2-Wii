@@ -20,17 +20,16 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_TEXT_HPP
 #define HEADER_SUPERTUX_SCRIPTING_TEXT_HPP
 
-#ifndef SCRIPTING_API
 #include <string>
 
 class TextObject;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class Text
+class Text : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::TextObject* m_parent;
 
@@ -41,7 +40,6 @@ public:
 private:
   Text(const Text&) = delete;
   Text& operator=(const Text&) = delete;
-#endif
 
 public:
   void set_text(const std::string& text);

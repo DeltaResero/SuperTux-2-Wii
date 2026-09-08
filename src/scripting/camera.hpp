@@ -22,19 +22,17 @@
 
 #include <string>
 
-#ifndef SCRIPTING_API
 class Camera;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class Camera
+class Camera : public ssq::ExposableClass
 {
 public:
-#ifndef SCRIPTING_API
   Camera(::Camera* camera);
   ~Camera();
-#endif
 
   void reload_config();
 
@@ -47,13 +45,11 @@ public:
   /** Scroll camera to position x,y in scrolltime seconds */
   void scroll_to(float x, float y, float scrolltime);
 
-#ifndef SCRIPTING_API
   ::Camera* camera;
 
 private:
   Camera(const Camera&);
   Camera& operator=(const Camera&);
-#endif
 };
 
 }

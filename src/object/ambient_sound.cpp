@@ -181,13 +181,11 @@ AmbientSound::update(float deltat)
   // latency=
 }
 
-#ifndef SCRIPTING_API
 void
 AmbientSound::set_pos(const Vector& pos)
 {
   MovingObject::set_pos(pos);
 }
-#endif
 
 void
 AmbientSound::set_pos(float x, float y)

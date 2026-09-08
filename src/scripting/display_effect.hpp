@@ -20,15 +20,14 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_DISPLAY_EFFECT_HPP
 #define HEADER_SUPERTUX_SCRIPTING_DISPLAY_EFFECT_HPP
 
-#ifndef SCRIPTING_API
 class DisplayEffect;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class DisplayEffect
+class DisplayEffect : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::DisplayEffect* m_parent;
 
@@ -40,7 +39,6 @@ private:
 private:
   DisplayEffect(const DisplayEffect&) = delete;
   DisplayEffect& operator=(const DisplayEffect&) = delete;
-#endif
 
 public:
   /// fade display to black

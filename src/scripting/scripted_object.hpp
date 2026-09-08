@@ -20,17 +20,16 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_SCRIPTED_OBJECT_HPP
 #define HEADER_SUPERTUX_SCRIPTING_SCRIPTED_OBJECT_HPP
 
-#ifndef SCRIPTING_API
 #include <string>
 
 class ScriptedObject;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class ScriptedObject
+class ScriptedObject : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::ScriptedObject* m_parent;
 
@@ -41,7 +40,6 @@ public:
 private:
   ScriptedObject(const ScriptedObject&) = delete;
   ScriptedObject& operator=(const ScriptedObject&) = delete;
-#endif
 
 public:
   void set_action(const std::string& animation);

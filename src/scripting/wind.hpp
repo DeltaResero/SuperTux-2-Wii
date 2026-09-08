@@ -20,19 +20,17 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_WIND_HPP
 #define HEADER_SUPERTUX_SCRIPTING_WIND_HPP
 
-#ifndef SCRIPTING_API
 class Wind;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class Wind
+class Wind : public ssq::ExposableClass
 {
 public:
-#ifndef SCRIPTING_API
   Wind(::Wind* wind);
   ~Wind();
-#endif
 
   /** Start wind */
   void start();
@@ -40,13 +38,11 @@ public:
   /** Stop wind */
   void stop();
 
-#ifndef SCRIPTING_API
   ::Wind* wind;
 
 private:
   Wind(const Wind&);
   Wind& operator=(const Wind&);
-#endif
 };
 
 } // namespace scripting

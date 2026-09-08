@@ -20,30 +20,26 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_CANDLE_HPP
 #define HEADER_SUPERTUX_SCRIPTING_CANDLE_HPP
 
-#ifndef SCRIPTING_API
 class Candle;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class Candle
+class Candle : public ssq::ExposableClass
 {
 public:
-#ifndef SCRIPTING_API
   Candle(::Candle* candle);
   ~Candle();
-#endif
 
   bool get_burning() const; /**< returns true if candle is lighted */
   void set_burning(bool burning); /**< true: light candle, false: extinguish candle */
 
-#ifndef SCRIPTING_API
   ::Candle* candle;
 
 private:
   Candle(const Candle&);
   Candle& operator=(const Candle&);
-#endif
 };
 
 }

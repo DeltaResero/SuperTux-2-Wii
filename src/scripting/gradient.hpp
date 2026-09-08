@@ -20,16 +20,15 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_GRADIENT_HPP
 #define HEADER_SUPERTUX_SCRIPTING_GRADIENT_HPP
 
-#ifndef SCRIPTING_API
 #include <string>
 class Gradient;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class Gradient
+class Gradient : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::Gradient* gradient;
 
@@ -40,7 +39,6 @@ public:
 private:
   Gradient(const Gradient&) = delete;
   Gradient& operator=(const Gradient&) = delete;
-#endif
 
 public:
   void set_direction(const std::string& direction);

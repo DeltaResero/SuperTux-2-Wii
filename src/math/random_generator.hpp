@@ -106,16 +106,6 @@ public:
   double randf(double v);
   double randf(double u, double v);
 
-  // For Squirrel wrapper, since miniswig (and even squirrel?) doesn't
-  // support function overloading or doubles
-  int rand1i(int v) { return rand(v); }
-  int rand2i(int u, int v) { return rand(u, v); }
-  float rand1f(float v)
-  { return static_cast<float>(randf(static_cast<double>(v))); }
-  float rand2f(float u, float v)
-  { return static_cast<float>(randf(static_cast<double>(u),
-                                    static_cast<double>(v))); }
-
   //private:
   void initialize();
   void srandom(unsigned long x);

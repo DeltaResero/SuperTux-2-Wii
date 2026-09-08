@@ -20,19 +20,17 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_LEVEL_TIME_HPP
 #define HEADER_SUPERTUX_SCRIPTING_LEVEL_TIME_HPP
 
-#ifndef SCRIPTING_API
 class LevelTime;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class LevelTime
+class LevelTime : public ssq::ExposableClass
 {
 public:
-#ifndef SCRIPTING_API
   LevelTime(::LevelTime* level_time);
   ~LevelTime();
-#endif
 
   /**
    * Resumes the countdown
@@ -54,13 +52,11 @@ public:
    */
   void set_time(float time_left);
 
-#ifndef SCRIPTING_API
   ::LevelTime* level_time;
 
 private:
   LevelTime(const LevelTime&);
   LevelTime& operator=(const LevelTime&);
-#endif
 };
 
 }

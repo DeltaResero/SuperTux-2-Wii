@@ -259,45 +259,26 @@ SET(SUPERTUX_VERSION ${SUPERTUX_VERSION_STRING})
 INCLUDE(ConfigureChecks)
 
 
-## Also build external/squirrel
+## Also build external/simplesquirrel, which carries squirrel under it
 
-IF(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/squirrel/CMakeLists.txt)
-  message(FATAL_ERROR "squirrel submodule is not checked out or ${CMAKE_CURRENT_SOURCE_DIR}/external/squirrel/CMakeLists.txt is missing")
-ENDIF()
+# simplesquirrel installs its own libraries by default; we link it, we don't ship it
+SET(SSQ_BUILD_INSTALL OFF CACHE BOOL "" FORCE)
+ADD_SUBDIRECTORY(external/simplesquirrel EXCLUDE_FROM_ALL)
 
-SET(SQUIRREL_PREFIX ${CMAKE_BINARY_DIR}/squirrel/)
-ExternalProject_Add(squirrel
-  SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/squirrel/"
-  CMAKE_ARGS
-  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-  -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-  -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-  -DCMAKE_C_COMPILER_LAUNCHER=${CMAKE_C_COMPILER_LAUNCHER}
-  -DCMAKE_CXX_COMPILER_LAUNCHER=${CMAKE_CXX_COMPILER_LAUNCHER}
-  -DCMAKE_INSTALL_PREFIX=${SQUIRREL_PREFIX}
-  -DINSTALL_INC_DIR=include)
+## These headers compile inside our own translation units, so they have to be
+## system headers or our warning flags are held against their code.
+FOREACH(TGT simplesquirrel_static squirrel_static sqstdlib_static)
+  GET_TARGET_PROPERTY(TGT_INCLUDE_DIRS ${TGT} INTERFACE_INCLUDE_DIRECTORIES)
+  IF(TGT_INCLUDE_DIRS)
+    SET_TARGET_PROPERTIES(${TGT} PROPERTIES
+      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${TGT_INCLUDE_DIRS}")
+  ENDIF()
+ENDFOREACH()
 
 IF(WIN32)
-	ADD_LIBRARY(squirrel_lib SHARED IMPORTED)
-	SET_TARGET_PROPERTIES(squirrel_lib PROPERTIES IMPORTED_LOCATION "${SQUIRREL_PREFIX}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}squirrel${CMAKE_SHARED_LIBRARY_SUFFIX}")
-	SET_TARGET_PROPERTIES(squirrel_lib PROPERTIES IMPORTED_IMPLIB "${SQUIRREL_PREFIX}/lib/squirrel${CMAKE_LINK_LIBRARY_SUFFIX}")
-	ADD_LIBRARY(sqstdlib_lib SHARED IMPORTED)
-	SET_TARGET_PROPERTIES(sqstdlib_lib PROPERTIES IMPORTED_LOCATION "${SQUIRREL_PREFIX}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}sqstdlib${CMAKE_SHARED_LIBRARY_SUFFIX}")
-	SET_TARGET_PROPERTIES(sqstdlib_lib PROPERTIES IMPORTED_IMPLIB "${SQUIRREL_PREFIX}/lib/sqstdlib${CMAKE_LINK_LIBRARY_SUFFIX}")
-	
 	#For debug run purposes
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/mk/msvc/run_supertux.bat.in" "${PROJECT_BINARY_DIR}/run_supertux.bat")
-ELSE()
-	ADD_LIBRARY(squirrel_lib STATIC IMPORTED)
-	SET_TARGET_PROPERTIES(squirrel_lib PROPERTIES IMPORTED_LOCATION "${SQUIRREL_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}squirrel_static${CMAKE_STATIC_LIBRARY_SUFFIX}")
-	ADD_LIBRARY(sqstdlib_lib STATIC IMPORTED)
-	SET_TARGET_PROPERTIES(sqstdlib_lib PROPERTIES IMPORTED_LOCATION "${SQUIRREL_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}sqstdlib_static${CMAKE_STATIC_LIBRARY_SUFFIX}")
 ENDIF()
-ADD_DEPENDENCIES(squirrel_lib squirrel)
-ADD_DEPENDENCIES(sqstdlib_lib squirrel)
-
-INCLUDE_DIRECTORIES(SYSTEM ${SQUIRREL_PREFIX}/include)
 
 ## Some additional include paths
 
@@ -342,10 +323,6 @@ ENDIF(HAVE_OPENGL)
 LIST(SORT SUPERTUX_SOURCES_C)
 LIST(SORT SUPERTUX_SOURCES_CXX)
 LIST(SORT SUPERTUX_RESOURCES)
-
-IF(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.cpp)
-  SET(SUPERTUX_SOURCES_CXX ${SUPERTUX_SOURCES_CXX} ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.cpp)
-ENDIF(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.cpp)
 
 ## Compile everything at once (roughly equivalent to cat *.cpp | gcc)
 
@@ -418,22 +395,6 @@ IF(WIN32)
   ENDIF(MINGW)
 ENDIF(WIN32)
 
-## Build miniswig and generate miniswig wrapper
-
-OPTION(GENERATE_WRAPPER "Build miniswig and generate the wrapper" OFF)
-IF(GENERATE_WRAPPER)
-  ADD_SUBDIRECTORY(tools/miniswig)
-  ADD_CUSTOM_COMMAND(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.hpp
-    COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_CXX_COMPILER}
-    ARGS -x "c++" -E -CC -DSCRIPTING_API src/scripting/wrapper.interface.hpp -o ${CMAKE_CURRENT_BINARY_DIR}/miniswig.tmp -I${CMAKE_CURRENT_SOURCE_DIR}/src
-    COMMAND tools/miniswig/miniswig
-    ARGS --input miniswig.tmp --output-cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.cpp --output-hpp ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.hpp --module supertux --select-namespace scripting
-    DEPENDS tools/miniswig/miniswig
-    IMPLICIT_DEPENDS CXX ${CMAKE_CURRENT_SOURCE_DIR}/src/scripting/wrapper.interface.hpp
-  )
-ENDIF(GENERATE_WRAPPER)
-
 ## Generate supertux executable in the right place
 
 #SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
@@ -469,15 +430,12 @@ ENDIF(WIN32)
 
 ## Link supertux binary with squirrel and other libraries
 
-ADD_DEPENDENCIES(supertux2_lib squirrel)
-
 TARGET_INCLUDE_DIRECTORIES(supertux2_lib SYSTEM PUBLIC ${SDL2_INCLUDE_DIRS})
 TARGET_INCLUDE_DIRECTORIES(supertux2_lib SYSTEM PUBLIC ${SDL2IMAGE_INCLUDE_DIRS})
 TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC ${SDL2_LIBRARIES})
 TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC ${SDL2IMAGE_LIBRARIES})
 
-TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC squirrel_lib)
-TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC sqstdlib_lib)
+TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC simplesquirrel_static)
 TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC sexp)
 IF(ENABLE_OPENAL)
   TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC ${OPENAL_LIBRARY})
@@ -563,12 +521,6 @@ ELSE(WIN32 AND NOT UNIX)
 ENDIF(WIN32 AND NOT UNIX)
 
 INSTALL(TARGETS supertux2 DESTINATION ${INSTALL_SUBDIR_BIN})
-
-IF(WIN32)
-	GET_PROPERTY(SQUIRREL_LIB_PATH TARGET squirrel_lib PROPERTY IMPORTED_LOCATION)
-	GET_PROPERTY(SQSTDLIB_LIB_PATH TARGET sqstdlib_lib PROPERTY IMPORTED_LOCATION)
-	INSTALL(FILES ${SQUIRREL_LIB_PATH} ${SQSTDLIB_LIB_PATH} DESTINATION ${INSTALL_SUBDIR_BIN})
-ENDIF()
 
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/INSTALL.md ${CMAKE_CURRENT_SOURCE_DIR}/README.md ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE DESTINATION ${INSTALL_SUBDIR_DOC})
 

@@ -20,19 +20,17 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_PLATFORM_HPP
 #define HEADER_SUPERTUX_SCRIPTING_PLATFORM_HPP
 
-#ifndef SCRIPTING_API
 class Platform;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class Platform
+class Platform : public ssq::ExposableClass
 {
 public:
-#ifndef SCRIPTING_API
   Platform(::Platform* platform);
   ~Platform();
-#endif
 
   /** Move platform until at given node, then stop */
   void goto_node(int node_no);
@@ -43,13 +41,11 @@ public:
   /** Stop platform at next node */
   void stop_moving();
 
-#ifndef SCRIPTING_API
   ::Platform* platform;
 
 private:
   Platform(const Platform&);
   Platform& operator=(const Platform&);
-#endif
 };
 
 }

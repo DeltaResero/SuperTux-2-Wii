@@ -20,17 +20,16 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_PLAYER_HPP
 #define HEADER_SUPERTUX_SCRIPTING_PLAYER_HPP
 
-#ifndef SCRIPTING_API
 #include <string>
 
 class Player;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class Player
+class Player : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::Player* m_parent;
 
@@ -41,7 +40,6 @@ public:
 private:
   Player(const Player&) = delete;
   Player& operator=(const Player&) = delete;
-#endif
 
 public:
   /**

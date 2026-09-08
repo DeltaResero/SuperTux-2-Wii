@@ -32,7 +32,7 @@
 
 #include "io/ifile_stream.hpp"
 #include "scripting/squirrel_error.hpp"
-#include "scripting/wrapper.hpp"
+#include "scripting/supertux_api.hpp"
 #include "squirrel_util.hpp"
 #include "supertux/console.hpp"
 #include "util/log.hpp"
@@ -115,7 +115,7 @@ Scripting::Scripting(bool enable_debugger)
   sq_deleteslot(global_vm, -2, SQFalse);
 
   // register supertux API
-  register_supertux_wrapper(global_vm);
+  register_supertux_api(global_vm);
 
   sq_pop(global_vm, 1);
 

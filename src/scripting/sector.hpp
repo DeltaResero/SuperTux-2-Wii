@@ -20,16 +20,15 @@
 #ifndef HEADER_SUPERTUX_SCRIPTING_SECTOR_HPP
 #define HEADER_SUPERTUX_SCRIPTING_SECTOR_HPP
 
-#ifndef SCRIPTING_API
 #include <string>
 class Sector;
-#endif
+
+#include <simplesquirrel/exposable_class.hpp>
 
 namespace scripting {
 
-class Sector
+class Sector : public ssq::ExposableClass
 {
-#ifndef SCRIPTING_API
 private:
   ::Sector* m_parent;
 
@@ -40,7 +39,6 @@ public:
 private:
   Sector(const Sector&) = delete;
   Sector& operator=(const Sector&) = delete;
-#endif
 
 public:
   void set_ambient_light(float red, float green, float blue);
