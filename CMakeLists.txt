@@ -265,6 +265,16 @@ INCLUDE(ConfigureChecks)
 SET(SSQ_BUILD_INSTALL OFF CACHE BOOL "" FORCE)
 ADD_SUBDIRECTORY(external/simplesquirrel EXCLUDE_FROM_ALL)
 
+## These headers compile inside our own translation units, so they have to be
+## system headers or our warning flags are held against their code.
+FOREACH(TGT simplesquirrel_static squirrel_static sqstdlib_static)
+  GET_TARGET_PROPERTY(TGT_INCLUDE_DIRS ${TGT} INTERFACE_INCLUDE_DIRECTORIES)
+  IF(TGT_INCLUDE_DIRS)
+    SET_TARGET_PROPERTIES(${TGT} PROPERTIES
+      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${TGT_INCLUDE_DIRS}")
+  ENDIF()
+ENDFOREACH()
+
 IF(WIN32)
 	#For debug run purposes
 	CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/mk/msvc/run_supertux.bat.in" "${PROJECT_BINARY_DIR}/run_supertux.bat")
