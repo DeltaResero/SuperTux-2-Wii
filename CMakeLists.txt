@@ -456,30 +456,24 @@ IF(HAVE_OPENGL)
 ENDIF(HAVE_OPENGL)
 
 if(BUILD_TESTS)
-  find_package(Threads REQUIRED)
-
-  # build gtest
-  # ${CMAKE_CURRENT_SOURCE_DIR} in include_directories is needed to generate -isystem instead of -I flags
-  add_library(gtest_main STATIC ${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/googletest/src/gtest_main.cc)
-  target_include_directories(gtest_main SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/googletest/include/)
-  add_library(gtest STATIC ${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/googletest/src/gtest-all.cc)
-  target_include_directories(gtest SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/googletest/)
-  target_include_directories(gtest SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/external/googletest/googletest/include/)
-
-  # build SuperTux tests
-  file(GLOB TEST_SUPERTUX_SOURCES tests/*.cpp)
-  add_executable(test_supertux2 ${TEST_SUPERTUX_SOURCES})
-  target_compile_options(test_supertux2 PRIVATE ${SUPERTUX2_WARNING_FLAGS})
-  target_link_libraries(test_supertux2
-    gtest gtest_main
-    supertux2_lib
-    ${CMAKE_THREAD_LIBS_INIT})
-
   # add 'make test' target, use 'make test ARGS="-V"' or 'ctest -V' for verbose
   enable_testing()
-  add_test(NAME test_supertux2
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND test_supertux2)
+
+  # each test file is its own program, so a failure names the file that failed
+  FUNCTION(MAKE_UNIT_TEST TEST_NAME SOURCE)
+    add_executable(${TEST_NAME} ${SOURCE})
+    target_compile_options(${TEST_NAME} PRIVATE ${SUPERTUX2_WARNING_FLAGS})
+    target_link_libraries(${TEST_NAME} supertux2_lib)
+    add_test(NAME ${TEST_NAME}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND ${TEST_NAME})
+  ENDFUNCTION()
+
+  MAKE_UNIT_TEST(aatriangle_test tests/aatriangle_test.cpp)
+  MAKE_UNIT_TEST(reader_test tests/reader_test.cpp)
+  MAKE_UNIT_TEST(size_test tests/size_test.cpp)
+  MAKE_UNIT_TEST(sizef_test tests/sizef_test.cpp)
+  MAKE_UNIT_TEST(string_util_test tests/string_util_test.cpp)
 endif()
 
 ## Install stuff
