@@ -259,21 +259,38 @@ SET(SUPERTUX_VERSION ${SUPERTUX_VERSION_STRING})
 INCLUDE(ConfigureChecks)
 
 
-## Also build external/simplesquirrel, which carries squirrel under it
+## Also build simplesquirrel and the squirrel it carries under it
 
-# simplesquirrel installs its own libraries by default; we link it, we don't ship it
-SET(SSQ_BUILD_INSTALL OFF CACHE BOOL "" FORCE)
-ADD_SUBDIRECTORY(external/simplesquirrel EXCLUDE_FROM_ALL)
+## Built here rather than through their own CMake, which exists to install a
+## shared library and a pkg-config file we do not ship. An ADD_SUBDIRECTORY at
+## this point in the file also misses the CMAKE_CXX_FLAGS set further down.
+SET(SQUIRREL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/simplesquirrel/libs/squirrel)
+SET(SIMPLESQUIRREL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/simplesquirrel)
+
+FILE(GLOB SQUIRREL_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${SQUIRREL_DIR}/squirrel/*.cpp)
+FILE(GLOB SQSTDLIB_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${SQUIRREL_DIR}/sqstdlib/*.cpp)
+FILE(GLOB SIMPLESQUIRREL_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${SIMPLESQUIRREL_DIR}/source/*.cpp)
+
+ADD_LIBRARY(squirrel STATIC ${SQUIRREL_SOURCES})
+ADD_LIBRARY(sqstdlib STATIC ${SQSTDLIB_SOURCES})
+ADD_LIBRARY(simplesquirrel STATIC ${SIMPLESQUIRREL_SOURCES})
 
 ## These headers compile inside our own translation units, so they have to be
 ## system headers or our warning flags are held against their code.
-FOREACH(TGT simplesquirrel_static squirrel_static sqstdlib_static)
-  GET_TARGET_PROPERTY(TGT_INCLUDE_DIRS ${TGT} INTERFACE_INCLUDE_DIRECTORIES)
-  IF(TGT_INCLUDE_DIRS)
-    SET_TARGET_PROPERTIES(${TGT} PROPERTIES
-      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${TGT_INCLUDE_DIRS}")
-  ENDIF()
-ENDFOREACH()
+TARGET_INCLUDE_DIRECTORIES(squirrel SYSTEM PUBLIC ${SQUIRREL_DIR}/include)
+TARGET_INCLUDE_DIRECTORIES(simplesquirrel SYSTEM PUBLIC ${SIMPLESQUIRREL_DIR}/include)
+TARGET_LINK_LIBRARIES(sqstdlib PUBLIC squirrel)
+TARGET_LINK_LIBRARIES(simplesquirrel PUBLIC squirrel sqstdlib)
+
+## _SQ64 widens SQInteger, so it has to reach every translation unit that sees
+## squirrel.h and not just the library's own.
+IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  TARGET_COMPILE_DEFINITIONS(squirrel PUBLIC _SQ64)
+ENDIF()
+
+## Both are C++11 code and stay on it; the project's own standard is not theirs.
+SET_TARGET_PROPERTIES(squirrel sqstdlib simplesquirrel PROPERTIES
+  CXX_STANDARD 11 CXX_STANDARD_REQUIRED ON)
 
 IF(WIN32)
 	#For debug run purposes
@@ -435,7 +452,7 @@ TARGET_INCLUDE_DIRECTORIES(supertux2_lib SYSTEM PUBLIC ${SDL2IMAGE_INCLUDE_DIRS}
 TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC ${SDL2_LIBRARIES})
 TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC ${SDL2IMAGE_LIBRARIES})
 
-TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC simplesquirrel_static)
+TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC simplesquirrel)
 TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC sexp)
 IF(ENABLE_OPENAL)
   TARGET_LINK_LIBRARIES(supertux2_lib PUBLIC ${OPENAL_LIBRARY})
