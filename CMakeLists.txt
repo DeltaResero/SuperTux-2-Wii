@@ -259,13 +259,13 @@ SET(SUPERTUX_VERSION ${SUPERTUX_VERSION_STRING})
 INCLUDE(ConfigureChecks)
 
 
-## Also build simplesquirrel and the squirrel it carries under it
+## Also build simplesquirrel and the squirrel it binds
 
 ## Built here rather than through their own CMake, which exists to install a
 ## shared library and a pkg-config file we do not ship. An ADD_SUBDIRECTORY at
 ## this point in the file also misses the CMAKE_CXX_FLAGS set further down.
-SET(SQUIRREL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/simplesquirrel/libs/squirrel)
-SET(SIMPLESQUIRREL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/simplesquirrel)
+SET(SQUIRREL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/squirrel)
+SET(SIMPLESQUIRREL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/lib/simplesquirrel)
 
 FILE(GLOB SQUIRREL_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${SQUIRREL_DIR}/squirrel/*.cpp)
 FILE(GLOB SQSTDLIB_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${SQUIRREL_DIR}/sqstdlib/*.cpp)
@@ -313,6 +313,8 @@ ENDIF(WIN32)
 
 FILE(GLOB SUPERTUX_SOURCES_C RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} external/obstack/*.c)
 
+## This glob reaches src/lib/*.cpp as well, so nothing vendored may sit at that
+## depth or it lands in our build under our warning flags.
 FILE(GLOB SUPERTUX_SOURCES_CXX RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*/*.cpp src/supertux/menu/*.cpp src/video/sdl/*.cpp)
 IF(NOT ENABLE_SDL_MIXER)
   LIST(REMOVE_ITEM SUPERTUX_SOURCES_CXX src/audio/sdl_mixer_device.cpp src/audio/sdl_sound_source.cpp)
