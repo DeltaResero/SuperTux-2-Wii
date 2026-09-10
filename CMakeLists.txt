@@ -493,6 +493,38 @@ if(BUILD_TESTS)
   MAKE_UNIT_TEST(size_test tests/size_test.cpp)
   MAKE_UNIT_TEST(sizef_test tests/sizef_test.cpp)
   MAKE_UNIT_TEST(string_util_test tests/string_util_test.cpp)
+
+  ## Squirrel's own interpreter, built to run squirrel's own samples against
+  ## output recorded from a tree we have not edited. This is what says the VM
+  ## still behaves after we touch it, since nothing else we have exercises the
+  ## compiler and the VM directly.
+  ADD_EXECUTABLE(sq tests/squirrel/sq.c)
+  TARGET_LINK_LIBRARIES(sq squirrel sqstdlib)
+  SET_TARGET_PROPERTIES(sq PROPERTIES C_STANDARD 99)
+
+  ## Six of the samples are Computer Language Shootout benchmarks that take
+  ## their problem size on the command line and fall back to 1, which computes
+  ## nothing worth recording. These sizes run in well under a second each.
+  SET(SQ_ARGS_ackermann 7)
+  SET(SQ_ARGS_array 2000)
+  SET(SQ_ARGS_fibonacci 25)
+  SET(SQ_ARGS_list 3)
+  SET(SQ_ARGS_matrix 40)
+  SET(SQ_ARGS_methcall 200000)
+
+  FILE(GLOB SQUIRREL_SAMPLES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/samples
+       ${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/samples/*.nut)
+  FOREACH(SAMPLE ${SQUIRREL_SAMPLES})
+    GET_FILENAME_COMPONENT(SAMPLE_NAME ${SAMPLE} NAME_WE)
+    ADD_TEST(NAME squirrel_${SAMPLE_NAME}
+      COMMAND ${CMAKE_COMMAND}
+        -DSQ=$<TARGET_FILE:sq>
+        -DSCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/samples/${SAMPLE}
+        -DEXPECTED=${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/expected/${SAMPLE_NAME}.txt
+        -DARGS=${SQ_ARGS_${SAMPLE_NAME}}
+        -DTEST_NAME=squirrel_${SAMPLE_NAME}
+        -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/run_sample.cmake)
+  ENDFOREACH()
 endif()
 
 ## Install stuff
