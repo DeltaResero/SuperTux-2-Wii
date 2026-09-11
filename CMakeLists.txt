@@ -229,8 +229,6 @@ ENDIF(ENABLE_SDL_MIXER)
 FIND_PACKAGE(OggVorbis REQUIRED)
 INCLUDE_DIRECTORIES(SYSTEM ${VORBIS_INCLUDE_DIR})
 
-INCLUDE(CheckSymbolExists)
-
 ## The version. The first three numbers are the upstream release this fork is
 ## built from; the suffix is this fork's own revision, bumped by hand. The same
 ## arrangement SuperTux-Wii uses, and it needs nothing from git, so a build from
@@ -249,11 +247,6 @@ ENDIF()
 
 
 SET(SUPERTUX_VERSION ${SUPERTUX_VERSION_STRING})
-
-## Check platform-dependent build options
-
-INCLUDE(ConfigureChecks)
-
 
 ## Also build simplesquirrel and the squirrel it binds
 
