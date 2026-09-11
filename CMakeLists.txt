@@ -231,10 +231,6 @@ INCLUDE_DIRECTORIES(SYSTEM ${VORBIS_INCLUDE_DIR})
 
 INCLUDE(CheckSymbolExists)
 
-#FIND_PACKAGE(ICONV REQUIRED)
-#INCLUDE_DIRECTORIES(SYSTEM ${ICONV_INCLUDE_DIR})
-#LINK_LIBRARIES(${ICONV_LIBRARY})
-
 ## The version. The first three numbers are the upstream release this fork is
 ## built from; the suffix is this fork's own revision, bumped by hand. The same
 ## arrangement SuperTux-Wii uses, and it needs nothing from git, so a build from
