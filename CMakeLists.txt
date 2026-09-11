@@ -431,6 +431,17 @@ set_target_properties(supertux2_lib PROPERTIES OUTPUT_NAME supertux2)
 target_compile_options(supertux2_lib PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 target_compile_options(supertux2 PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 
+## The vendored trees are held to the same flags, less three. -Weffc++ wants
+## 308 members named in constructor initializer lists, including ones the VM
+## leaves raw on purpose. format() builds its format string from the script's
+## argument, so it can never be a literal. And -Wsign-conversion lands on 246
+## sites where squirrel's own API returns -1 as a sentinel, which is the one
+## change our sample tests could not vouch for.
+FOREACH(TGT squirrel sqstdlib simplesquirrel)
+  TARGET_COMPILE_OPTIONS(${TGT} PRIVATE ${SUPERTUX2_WARNING_FLAGS}
+    -Wno-effc++ -Wno-format-nonliteral -Wno-sign-conversion)
+ENDFOREACH()
+
 IF(WIN32)
   ## Copy dlls on windows
   ADD_CUSTOM_COMMAND(TARGET supertux2_lib POST_BUILD
