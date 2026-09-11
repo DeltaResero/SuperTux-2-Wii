@@ -131,9 +131,9 @@ IF(WIN32)
   FIND_LIBRARY(SDL2MAIN_LIBRARIES NAMES SDL2main PATHS "${DEPENDENCY_FOLDER}/lib")
 ELSE(WIN32)
   INCLUDE(FindPkgConfig)
-  ## 2.0.10 for SDL_RenderCopyExF, which the software renderer's lighting
+  ## 2.0.10 for SDL_RenderCopyExF that the software renderer's lighting
   ## needs to place a copy on a fraction of a pixel, and 2.0.18 for
-  ## SDL_RenderSetVSync, which the vsync setting changes through.
+  ## SDL_RenderSetVSync that the vsync setting changes through.
   PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2>=2.0.18)
   PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 ENDIF(WIN32)
@@ -525,6 +525,9 @@ endif()
 
 ## Install stuff
 
+## Sets CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS that the VCREDIST branch and CPack both read.
+INCLUDE(InstallRequiredSystemLibraries)
+
 IF(WIN32 AND NOT UNIX)
 
   SET(INSTALL_SUBDIR_BIN "bin" CACHE STRING "Installation subdir for binaries")
@@ -538,7 +541,6 @@ IF(WIN32 AND NOT UNIX)
   OPTION(PACKAGE_VCREDIST "Package the VCREDIST libraries with the program" OFF)
 
   IF(PACKAGE_VCREDIST)
-    include(InstallRequiredSystemLibraries)
     INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION ${INSTALL_SUBDIR_BIN})
     include(FindWindowsSDK)
     IF(${CMAKE_VS_PLATFORM_NAME} STREQUAL "Win32")
@@ -591,8 +593,6 @@ configure_file(config.h.in ${CMAKE_BINARY_DIR}/config.h )
 
 
 ## CPack/Installation-specific stuff
-
-INCLUDE(InstallRequiredSystemLibraries)
 
 SET(CPACK_PACKAGE_NAME "SuperTux2-Wii")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Jump'n'Run Game featuring Tux")
