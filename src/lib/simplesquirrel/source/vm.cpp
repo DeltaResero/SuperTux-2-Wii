@@ -40,11 +40,11 @@ namespace ssq {
         return *static_cast<VM*>(ptr);
     }
 
-    VM::VM():Table(), foreignPtr(nullptr) {
+    VM::VM():Table(), threads(), foreignPtr(nullptr) {
 
     }
 
-    VM::VM(size_t stackSize, uint32_t flags):Table(), foreignPtr(nullptr) {
+    VM::VM(size_t stackSize, uint32_t flags):Table(), threads(), foreignPtr(nullptr) {
         vm = sq_open(narrow<SQInteger>(stackSize));
         sq_setforeignptr(vm, this);
         sq_setsharedforeignptr(vm, this);
@@ -63,7 +63,7 @@ namespace ssq {
         sq_pop(vm, 1);
     }
 
-    VM::VM(const HSQOBJECT& threadObj):Table(), foreignPtr(nullptr) {
+    VM::VM(const HSQOBJECT& threadObj):Table(), threads(), foreignPtr(nullptr) {
         assert(threadObj._type == OT_THREAD);
 
         vm = threadObj._unVal.pThread;
@@ -124,7 +124,7 @@ namespace ssq {
         swap(foreignPtr, other.foreignPtr);
     }
         
-    VM::VM(VM&& other) NOEXCEPT :Table(), foreignPtr(nullptr) {
+    VM::VM(VM&& other) NOEXCEPT :Table(), threads(), foreignPtr(nullptr) {
         swap(other);
     }
 

@@ -433,7 +433,7 @@ FOREACH(TGT squirrel sqstdlib)
   TARGET_COMPILE_OPTIONS(${TGT} PRIVATE ${SUPERTUX2_WARNING_FLAGS}
     -Wno-effc++ -Wno-sign-conversion)
 ENDFOREACH()
-TARGET_COMPILE_OPTIONS(simplesquirrel PRIVATE ${SUPERTUX2_WARNING_FLAGS} -Wno-effc++)
+TARGET_COMPILE_OPTIONS(simplesquirrel PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 
 IF(WIN32)
   ## Copy dlls on windows

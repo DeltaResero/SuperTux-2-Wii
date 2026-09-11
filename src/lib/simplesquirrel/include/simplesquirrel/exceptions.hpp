@@ -18,6 +18,12 @@ namespace ssq {
             generate_message(msg);
         }
 
+        /* vm is borrowed, so copying the handle is what we want */
+        Exception(const Exception &) = default;
+        Exception &operator=(const Exception &) = default;
+        Exception(Exception &&) = default;
+        Exception &operator=(Exception &&) = default;
+
         virtual const char* what() const throw() override {
             return message.c_str();
         }
