@@ -259,7 +259,7 @@ namespace ssq {
             }
 
             SQInteger len = sq_getsize(vm,index);    
-            return std::string(val,len);
+            return std::string(val,narrow<std::string::size_type>(len));
         }
 #endif
 
@@ -464,12 +464,12 @@ namespace ssq {
 #ifdef SQUNICODE
         template<>
         inline void pushValue(HSQUIRRELVM vm, const std::wstring& value) {
-            sq_pushstring(vm, value.c_str(), value.size());
+            sq_pushstring(vm, value.c_str(), narrow<SQInteger>(value.size()));
         }
 #else
         template<>
         inline void pushValue(HSQUIRRELVM vm, const std::string& value) {
-            sq_pushstring(vm, value.c_str(), value.size());
+            sq_pushstring(vm, value.c_str(), narrow<SQInteger>(value.size()));
         }
 #endif
 

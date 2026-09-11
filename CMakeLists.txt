@@ -429,10 +429,11 @@ target_compile_options(supertux2 PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 ## argument, so it can never be a literal. And -Wsign-conversion lands on 246
 ## sites where squirrel's own API returns -1 as a sentinel, which is the one
 ## change our sample tests could not vouch for.
-FOREACH(TGT squirrel sqstdlib simplesquirrel)
+FOREACH(TGT squirrel sqstdlib)
   TARGET_COMPILE_OPTIONS(${TGT} PRIVATE ${SUPERTUX2_WARNING_FLAGS}
     -Wno-effc++ -Wno-sign-conversion)
 ENDFOREACH()
+TARGET_COMPILE_OPTIONS(simplesquirrel PRIVATE ${SUPERTUX2_WARNING_FLAGS} -Wno-effc++)
 
 IF(WIN32)
   ## Copy dlls on windows

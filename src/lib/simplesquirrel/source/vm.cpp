@@ -45,7 +45,7 @@ namespace ssq {
     }
 
     VM::VM(size_t stackSize, uint32_t flags):Table(), foreignPtr(nullptr) {
-        vm = sq_open(stackSize);
+        vm = sq_open(narrow<SQInteger>(stackSize));
         sq_setforeignptr(vm, this);
         sq_setsharedforeignptr(vm, this);
 
@@ -191,7 +191,7 @@ namespace ssq {
 
     Script VM::compileSource(const char* source, const char* name) {
         Script script(vm);
-        if (SQ_FAILED(sq_compilebuffer(vm, source, strlen(source), name, true))) {
+        if (SQ_FAILED(sq_compilebuffer(vm, source, narrow<SQInteger>(strlen(source)), name, true))) {
             //if (!compileException)
                 throw CompileException(vm, "Source cannot be compiled!");
             //throw *compileException;
@@ -312,7 +312,7 @@ namespace ssq {
     VM VM::newThread(size_t stackSize) {
         assert(VM::getMain(vm).getHandle() == vm); // Assert this is the main VM
 
-        HSQUIRRELVM thread = sq_newthread(vm, stackSize);
+        HSQUIRRELVM thread = sq_newthread(vm, narrow<SQInteger>(stackSize));
         if (!thread)
             throw RuntimeException(vm, "Failed to create thread!");
 
@@ -349,7 +349,7 @@ namespace ssq {
     Enum VM::addEnum(const char* name) {
         Enum enm(vm);
         sq_pushconsttable(vm);
-        sq_pushstring(vm, name, strlen(name));
+        sq_pushstring(vm, name, narrow<SQInteger>(strlen(name)));
         detail::push<Object>(vm, enm);
         if(SQ_FAILED(sq_newslot(vm, -3, SQFalse))) {
             throw RuntimeException(vm, "Failed to add enumerator '" + std::string(name) + "'!");
@@ -366,7 +366,7 @@ namespace ssq {
     }
 
     Object VM::callAndReturn(SQUnsignedInteger nparams, SQInteger top) const {
-        if(SQ_FAILED(sq_call(vm, 1 + nparams, SQTrue, SQTrue))) {
+        if(SQ_FAILED(sq_call(vm, narrow<SQInteger>(1 + nparams), SQTrue, SQTrue))) {
             sq_settop(vm, top);
             //if (!runtimeException)
                 throw RuntimeException(vm, "Error running script!");

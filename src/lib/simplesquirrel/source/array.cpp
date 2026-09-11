@@ -5,7 +5,7 @@
 
 namespace ssq {
     Array::Array(HSQUIRRELVM vm_, size_t len):Object(vm_) {
-        sq_newarray(vm_, len);
+        sq_newarray(vm_, narrow<SQInteger>(len));
         sq_getstackobj(vm_, -1, &obj);
         sq_addref(vm_, &obj);
         sq_pop(vm_,1); // Pop array

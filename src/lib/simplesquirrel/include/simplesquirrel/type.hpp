@@ -2,6 +2,9 @@
 
 #include <squirrel.h>
 
+#include <cassert>
+#include <utility>
+
 #if defined(SSQ_DLL) && defined(_MSC_VER)
     #ifdef SSQ_EXPORTS
 		#define SSQ_API __declspec(dllexport)
@@ -13,6 +16,12 @@
 #endif
 
 namespace ssq {
+    /* a cast the debug build proves the value survives */
+    template<typename To, typename From>
+    inline To narrow(From v) {
+        assert(std::in_range<To>(v));
+        return static_cast<To>(v);
+    }
     /**
      * @ingroup simplesquirrel
      */

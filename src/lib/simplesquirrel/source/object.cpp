@@ -96,7 +96,7 @@ namespace ssq {
         Object ret(vm);
 
         sq_pushobject(vm, obj);
-        sq_pushstring(vm, name, strlen(name));
+        sq_pushstring(vm, name, narrow<SQInteger>(strlen(name)));
 
         if (SQ_FAILED(sq_get(vm, -2))) {
             sq_pop(vm, 1);

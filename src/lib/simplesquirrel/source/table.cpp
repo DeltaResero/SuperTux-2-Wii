@@ -51,7 +51,7 @@ namespace ssq {
         assert(sizeof(name) < static_cast<size_t>(std::numeric_limits<SQInteger>::max()));
         Table table(vm);
         sq_pushobject(vm, obj);
-        sq_pushstring(vm, name, strlen(name));
+        sq_pushstring(vm, name, narrow<SQInteger>(strlen(name)));
         detail::push<Object>(vm, table);
         if(SQ_FAILED(sq_newslot(vm, -3, SQFalse))) {
             throw RuntimeException(vm, "Failed to add table '" + std::string(name) + "'!");
