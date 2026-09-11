@@ -67,6 +67,8 @@ static SQInteger validate_format(HSQUIRRELVM v, SQChar *fmt, const SQChar *src, 
     return n;
 }
 
+static SQInteger sqstd_formatvalue(SQChar *dest,SQInteger n,const SQChar *fmt,...);
+
 SQRESULT sqstd_format(HSQUIRRELVM v,SQInteger nformatstringidx,SQInteger *outlen,SQChar **output)
 {
     const SQChar *format;
@@ -144,9 +146,9 @@ SQRESULT sqstd_format(HSQUIRRELVM v,SQInteger nformatstringidx,SQInteger *outlen
             allocated += addlen + sizeof(SQChar);
             dest = sq_getscratchpad(v,allocated);
             switch(valtype) {
-            case 's': i += scsprintf(&dest[i],allocated,fmt,ts); break;
-            case 'i': i += scsprintf(&dest[i],allocated,fmt,ti); break;
-            case 'f': i += scsprintf(&dest[i],allocated,fmt,tf); break;
+            case 's': i += sqstd_formatvalue(&dest[i],allocated,fmt,ts); break;
+            case 'i': i += sqstd_formatvalue(&dest[i],allocated,fmt,ti); break;
+            case 'f': i += sqstd_formatvalue(&dest[i],allocated,fmt,tf); break;
             };
             nparam ++;
         }
@@ -299,14 +301,14 @@ static SQInteger _string_escape(HSQUIRRELVM v)
     }
 #ifdef SQUNICODE
 #if WCHAR_SIZE == 2
-    const SQChar *escpat = _SC("\\x%04x");
+#define ESCPAT _SC("\\x%04x")
     const SQInteger maxescsize = 6;
 #else //WCHAR_SIZE == 4
-    const SQChar *escpat = _SC("\\x%08x");
+#define ESCPAT _SC("\\x%08x")
     const SQInteger maxescsize = 10;
 #endif
 #else
-    const SQChar *escpat = _SC("\\x%02x");
+#define ESCPAT _SC("\\x%02x")
     const SQInteger maxescsize = 4;
 #endif
     SQInteger destcharsize = (size * maxescsize); //assumes every char could be escaped
@@ -342,7 +344,7 @@ static SQInteger _string_escape(HSQUIRRELVM v)
         }
         else {
 
-            dest += scsprintf(dest, destcharsize, escpat, c);
+            dest += scsprintf(dest, destcharsize, ESCPAT, c);
             escaped++;
         }
     }
@@ -550,4 +552,14 @@ SQInteger sqstd_register_stringlib(HSQUIRRELVM v)
         i++;
     }
     return 1;
+}
+
+/* the format comes from the script and can never be a literal */
+static SQInteger sqstd_formatvalue(SQChar *dest,SQInteger n,const SQChar *fmt,...)
+{
+    va_list args;
+    va_start(args,fmt);
+    SQInteger r=scvsprintf(dest,n,fmt,args);
+    va_end(args);
+    return r;
 }

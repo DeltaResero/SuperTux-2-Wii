@@ -431,7 +431,7 @@ target_compile_options(supertux2 PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 ## change our sample tests could not vouch for.
 FOREACH(TGT squirrel sqstdlib simplesquirrel)
   TARGET_COMPILE_OPTIONS(${TGT} PRIVATE ${SUPERTUX2_WARNING_FLAGS}
-    -Wno-effc++ -Wno-format-nonliteral -Wno-sign-conversion)
+    -Wno-effc++ -Wno-sign-conversion)
 ENDFOREACH()
 
 IF(WIN32)
