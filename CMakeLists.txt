@@ -492,6 +492,13 @@ if(BUILD_TESTS)
   MAKE_UNIT_TEST(sizef_test tests/sizef_test.cpp)
   MAKE_UNIT_TEST(string_util_test tests/string_util_test.cpp)
 
+  ## sq reaches squirrel and sqstdlib but none of simplesquirrel's own code.
+  ADD_EXECUTABLE(simplesquirrel_test tests/simplesquirrel_test.cpp)
+  TARGET_COMPILE_OPTIONS(simplesquirrel_test PRIVATE ${SUPERTUX2_WARNING_FLAGS})
+  TARGET_INCLUDE_DIRECTORIES(simplesquirrel_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+  TARGET_LINK_LIBRARIES(simplesquirrel_test simplesquirrel)
+  ADD_TEST(NAME simplesquirrel_test COMMAND simplesquirrel_test)
+
   ## Squirrel's own interpreter, built to run squirrel's own samples against
   ## output recorded from a tree we have not edited. This is what says the VM
   ## still behaves after we touch it, since nothing else we have exercises the
