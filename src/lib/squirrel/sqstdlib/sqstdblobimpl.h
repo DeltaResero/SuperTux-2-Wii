@@ -11,13 +11,10 @@ struct SQBlob : public SQStream
 {
     SQBlob(const SQBlob &) = delete;
     SQBlob &operator=(const SQBlob &) = delete;
-    SQBlob(SQInteger size) {
-        _size = size;
-        _allocated = size;
-        _buf = (unsigned char *)sq_malloc(sqstd_narrow<SQUnsignedInteger>(size));
+    SQBlob(SQInteger size):_size(size),_allocated(size),_ptr(0),
+        _buf((unsigned char *)sq_malloc(sqstd_narrow<SQUnsignedInteger>(size))),
+        _owns(true) {
         memset(_buf, 0, sqstd_narrow<size_t>(_size));
-        _ptr = 0;
-        _owns = true;
     }
     virtual ~SQBlob() {
         sq_free(_buf, sqstd_narrow<SQUnsignedInteger>(_allocated));
