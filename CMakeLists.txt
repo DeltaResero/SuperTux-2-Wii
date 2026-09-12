@@ -423,12 +423,11 @@ set_target_properties(supertux2_lib PROPERTIES OUTPUT_NAME supertux2)
 target_compile_options(supertux2_lib PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 target_compile_options(supertux2 PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 
-## The vendored trees are held to the same flags, less three. -Weffc++ wants
-## 308 members named in constructor initializer lists, including ones the VM
-## leaves raw on purpose. format() builds its format string from the script's
-## argument, so it can never be a literal. And -Wsign-conversion lands on 246
-## sites where squirrel's own API returns -1 as a sentinel, which is the one
-## change our sample tests could not vouch for.
+## These trees take our flags, less the exceptions below. -Weffc++ wants members
+## named in constructor initializer lists where squirrel sets them in the body,
+## but that's all the flag can see. -Wsign-conversion lands on SQInteger going to
+## an unsigned type. Squirrel returns -1 as a sentinel, so a plain cast would
+## hide a real value.
 FOREACH(TGT squirrel sqstdlib)
   TARGET_COMPILE_OPTIONS(${TGT} PRIVATE ${SUPERTUX2_WARNING_FLAGS}
     -Wno-effc++ -Wno-sign-conversion)
