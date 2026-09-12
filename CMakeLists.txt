@@ -140,6 +140,7 @@ ENDIF(WIN32)
 SET(HAVE_SDL TRUE)
 
 OPTION(BUILD_TESTS "Build test cases" OFF)
+OPTION(BUILD_TESTS_M32 "Also run the squirrel samples at 32-bit integer width" OFF)
 OPTION(ENABLE_OPENGL "Enable OpenGL support" ON)
 ## GLEW fetches the entry points a desktop driver keeps behind extensions.
 ## Hardware with a fixed 1.x pipeline has none to fetch and no GLEW built for
@@ -517,20 +518,54 @@ if(BUILD_TESTS)
   SET(SQ_ARGS_matrix 40)
   SET(SQ_ARGS_methcall 200000)
 
+  ## _SQ64 is set only on 64-bit, so a 32-bit build gets int where this one gets
+  ## long long, and every sample recording was made at the wider of the two.
+  IF(BUILD_TESTS_M32)
+    INCLUDE(CheckCXXSourceCompiles)
+    SET(CMAKE_REQUIRED_FLAGS "-m32")
+    CHECK_CXX_SOURCE_COMPILES("int main(){return 0;}" HAVE_M32)
+    UNSET(CMAKE_REQUIRED_FLAGS)
+    IF(NOT HAVE_M32)
+      MESSAGE(FATAL_ERROR "BUILD_TESTS_M32 needs a compiler that can target -m32")
+    ENDIF()
+
+    ## Built from sources rather than the squirrel targets, which carry _SQ64
+    ## and are the wrong width to link against.
+    ADD_EXECUTABLE(sq32 tests/squirrel/sq.c ${SQUIRREL_SOURCES} ${SQSTDLIB_SOURCES})
+    TARGET_INCLUDE_DIRECTORIES(sq32 SYSTEM PRIVATE ${SQUIRREL_DIR}/include)
+    TARGET_INCLUDE_DIRECTORIES(sq32 PRIVATE ${SQUIRREL_DIR}/squirrel ${SQUIRREL_DIR}/sqstdlib)
+    ## No warning flags, as with sq: this target exists to run the samples, and
+    ## sq.c compiles as C where most of our list is C++ only.
+    TARGET_COMPILE_OPTIONS(sq32 PRIVATE -m32)
+    TARGET_LINK_OPTIONS(sq32 PRIVATE -m32)
+    SET_TARGET_PROPERTIES(sq32 PROPERTIES C_STANDARD 99)
+  ENDIF()
+
   FILE(GLOB SQUIRREL_SAMPLES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/samples
        ${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/samples/*.nut)
   FOREACH(SAMPLE ${SQUIRREL_SAMPLES})
     GET_FILENAME_COMPONENT(SAMPLE_NAME ${SAMPLE} NAME_WE)
-    ADD_TEST(NAME squirrel_${SAMPLE_NAME}
-      COMMAND ${CMAKE_COMMAND}
-        -DSQ=$<TARGET_FILE:sq>
-        -DSCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/samples/${SAMPLE}
-        -DEXPECTED=${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/expected/${SAMPLE_NAME}.txt
-        -DARGS=${SQ_ARGS_${SAMPLE_NAME}}
-        -DTEST_NAME=squirrel_${SAMPLE_NAME}
-        -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/run_sample.cmake)
-    ## These finish in well under a second, so the cap only fires on a stuck VM.
-    SET_TESTS_PROPERTIES(squirrel_${SAMPLE_NAME} PROPERTIES TIMEOUT 30)
+    SET(SQ_TARGETS sq)
+    IF(BUILD_TESTS_M32)
+      LIST(APPEND SQ_TARGETS sq32)
+    ENDIF()
+    FOREACH(SQ_TARGET ${SQ_TARGETS})
+      IF(SQ_TARGET STREQUAL sq)
+        SET(CASE squirrel_${SAMPLE_NAME})
+      ELSE()
+        SET(CASE squirrel_m32_${SAMPLE_NAME})
+      ENDIF()
+      ADD_TEST(NAME ${CASE}
+        COMMAND ${CMAKE_COMMAND}
+          -DSQ=$<TARGET_FILE:${SQ_TARGET}>
+          -DSCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/samples/${SAMPLE}
+          -DEXPECTED=${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/expected/${SAMPLE_NAME}.txt
+          -DARGS=${SQ_ARGS_${SAMPLE_NAME}}
+          -DTEST_NAME=${CASE}
+          -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/squirrel/run_sample.cmake)
+      ## These finish in well under a second, so the cap only fires on a stuck VM.
+      SET_TESTS_PROPERTIES(${CASE} PROPERTIES TIMEOUT 30)
+    ENDFOREACH()
   ENDFOREACH()
 endif()
 
