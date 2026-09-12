@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqdebug.cpp
+// SPDX-License-Identifier: MIT
+
 /*
     see copyright notice in squirrel.h
 */

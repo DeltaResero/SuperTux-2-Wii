@@ -1,3 +1,8 @@
+// src/lib/simplesquirrel/source/array.cpp
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2019 Matus Novak <matusnov@gmail.com>
+
 #include "simplesquirrel/array.hpp"
 #include "simplesquirrel/exceptions.hpp"
 #include <squirrel.h>

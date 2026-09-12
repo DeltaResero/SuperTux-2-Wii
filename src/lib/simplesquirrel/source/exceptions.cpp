@@ -1,3 +1,8 @@
+// src/lib/simplesquirrel/source/exceptions.cpp
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2019 Matus Novak <matusnov@gmail.com>
+
 #include "simplesquirrel/exceptions.hpp"
 
 namespace ssq {

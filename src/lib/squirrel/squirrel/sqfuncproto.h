@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqfuncproto.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQFUNCTION_H_
 #define _SQFUNCTION_H_

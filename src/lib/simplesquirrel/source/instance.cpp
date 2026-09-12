@@ -1,3 +1,8 @@
+// src/lib/simplesquirrel/source/instance.cpp
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2019 Matus Novak <matusnov@gmail.com>
+
 #include "simplesquirrel/instance.hpp"
 #include "simplesquirrel/exceptions.hpp"
 #include "simplesquirrel/class.hpp"

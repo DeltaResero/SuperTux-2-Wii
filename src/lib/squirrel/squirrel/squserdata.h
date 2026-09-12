@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/squserdata.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQUSERDATA_H_
 #define _SQUSERDATA_H_

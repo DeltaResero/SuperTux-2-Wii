@@ -1,3 +1,8 @@
+// src/lib/simplesquirrel/source/table.cpp
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2019 Matus Novak <matusnov@gmail.com>
+
 #include "simplesquirrel/object.hpp"
 #include "simplesquirrel/function.hpp"
 #include "simplesquirrel/class.hpp"

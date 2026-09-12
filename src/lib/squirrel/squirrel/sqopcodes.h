@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqopcodes.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQOPCODES_H_
 #define _SQOPCODES_H_

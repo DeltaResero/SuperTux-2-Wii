@@ -1,3 +1,8 @@
+// src/lib/simplesquirrel/source/enum.cpp
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2019 Matus Novak <matusnov@gmail.com>
+
 #include "simplesquirrel/enum.hpp"
 #include <squirrel.h>
 #include <forward_list>

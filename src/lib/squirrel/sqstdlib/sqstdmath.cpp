@@ -1,3 +1,6 @@
+// src/lib/squirrel/sqstdlib/sqstdmath.cpp
+// SPDX-License-Identifier: MIT
+
 /* see copyright notice in squirrel.h */
 #include <squirrel.h>
 #include <math.h>

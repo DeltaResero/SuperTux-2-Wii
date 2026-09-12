@@ -1,3 +1,6 @@
+// src/lib/squirrel/sqstdlib/sqstdstream.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQSTD_STREAM_H_
 #define _SQSTD_STREAM_H_

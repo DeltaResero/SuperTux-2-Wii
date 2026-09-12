@@ -1,3 +1,6 @@
+// src/lib/squirrel/include/squirrel.h
+// SPDX-License-Identifier: MIT
+
 /*
 Copyright (c) 2003-2024 Alberto Demichelis
 

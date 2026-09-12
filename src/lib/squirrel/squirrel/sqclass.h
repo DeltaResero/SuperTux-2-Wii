@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqclass.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQCLASS_H_
 #define _SQCLASS_H_

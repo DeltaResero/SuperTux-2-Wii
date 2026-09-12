@@ -1,3 +1,6 @@
+// src/lib/squirrel/include/sqstdio.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQSTDIO_H_
 #define _SQSTDIO_H_

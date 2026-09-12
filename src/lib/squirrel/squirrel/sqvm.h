@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqvm.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQVM_H_
 #define _SQVM_H_

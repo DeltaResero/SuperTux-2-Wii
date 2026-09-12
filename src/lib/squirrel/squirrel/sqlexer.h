@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqlexer.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQLEXER_H_
 #define _SQLEXER_H_

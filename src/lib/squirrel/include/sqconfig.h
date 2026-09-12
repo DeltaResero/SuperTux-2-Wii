@@ -1,3 +1,8 @@
+// src/lib/squirrel/include/sqconfig.h
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2003-2024 Alberto Demichelis
+
 
 #ifdef _SQ64
 

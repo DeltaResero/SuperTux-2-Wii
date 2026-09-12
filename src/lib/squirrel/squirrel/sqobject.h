@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqobject.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQOBJECT_H_
 #define _SQOBJECT_H_

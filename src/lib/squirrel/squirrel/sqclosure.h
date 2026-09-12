@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqclosure.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQCLOSURE_H_
 #define _SQCLOSURE_H_

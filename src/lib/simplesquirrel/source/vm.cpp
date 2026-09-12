@@ -1,3 +1,8 @@
+// src/lib/simplesquirrel/source/vm.cpp
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2019 Matus Novak <matusnov@gmail.com>
+
 #include <squirrel.h>
 #include <sqstdstring.h>
 #include <sqstdsystem.h>

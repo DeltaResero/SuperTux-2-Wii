@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqcompiler.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQCOMPILER_H_
 #define _SQCOMPILER_H_

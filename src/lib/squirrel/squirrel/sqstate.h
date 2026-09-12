@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqstate.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQSTATE_H_
 #define _SQSTATE_H_

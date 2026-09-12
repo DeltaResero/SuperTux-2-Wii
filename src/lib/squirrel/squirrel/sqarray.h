@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqarray.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQARRAY_H_
 #define _SQARRAY_H_

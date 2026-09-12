@@ -1,4 +1,9 @@
-/*  see copyright notice in squirrel.h */
+// src/lib/squirrel/sqstdlib/sqstdnarrow.h
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2026 SuperTux Team
+// Copyright (c) 2026 DeltaResero
+
 #ifndef _SQSTD_NARROW_H_
 #define _SQSTD_NARROW_H_
 

@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/sqpcheader.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQPCHEADER_H_
 #define _SQPCHEADER_H_

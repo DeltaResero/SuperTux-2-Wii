@@ -1,3 +1,6 @@
+// src/lib/squirrel/squirrel/squtils.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQUTILS_H_
 #define _SQUTILS_H_

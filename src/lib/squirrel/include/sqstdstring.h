@@ -1,3 +1,6 @@
+// src/lib/squirrel/include/sqstdstring.h
+// SPDX-License-Identifier: MIT
+
 /*  see copyright notice in squirrel.h */
 #ifndef _SQSTD_STRING_H_
 #define _SQSTD_STRING_H_

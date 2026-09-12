@@ -1,3 +1,8 @@
+// src/lib/simplesquirrel/include/simplesquirrel/binding.hpp
+// SPDX-License-Identifier: MIT
+//
+// Copyright (c) 2019 Matus Novak <matusnov@gmail.com>
+
 #pragma once
 
 #include "args.hpp"
