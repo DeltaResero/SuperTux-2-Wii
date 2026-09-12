@@ -6,6 +6,7 @@
 #include <sqstdblob.h>
 #include "sqstdstream.h"
 #include "sqstdblobimpl.h"
+#include "sqstdnarrow.h"
 
 #define SQSTD_BLOB_TYPE_TAG ((SQUnsignedInteger)(SQSTD_STREAM_TYPE_TAG | 0x00000002))
 
@@ -157,7 +158,7 @@ static SQInteger _blob__cloned(HSQUIRRELVM v)
     }
     //SQBlob *thisone = new SQBlob(other->Len());
     SQBlob *thisone = new (sq_malloc(sizeof(SQBlob)))SQBlob(other->Len());
-    memcpy(thisone->GetBuf(),other->GetBuf(),thisone->Len());
+    memcpy(thisone->GetBuf(),other->GetBuf(),sqstd_narrow<size_t>(thisone->Len()));
     if(SQ_FAILED(sq_setinstanceup(v,1,thisone))) {
         thisone->~SQBlob();
         sq_free(thisone,sizeof(SQBlob));

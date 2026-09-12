@@ -1,6 +1,7 @@
 /* see copyright notice in squirrel.h */
 #include <squirrel.h>
 #include <sqstdaux.h>
+#include "sqstdnarrow.h"
 #include <stdio.h>
 #include <assert.h>
 #include <stdarg.h>
@@ -31,7 +32,7 @@ void sqstd_printcallstack(HSQUIRRELVM v)
 
         for(level=0;level<10;level++){
             seq=0;
-            while((name = sq_getlocal(v,level,seq)))
+            while((name = sq_getlocal(v,sqstd_narrow<SQUnsignedInteger>(level),sqstd_narrow<SQUnsignedInteger>(seq))))
             {
                 seq++;
                 switch(sq_gettype(v,-1))
@@ -138,7 +139,7 @@ SQRESULT sqstd_throwerrorf(HSQUIRRELVM v,const SQChar *err,...)
 begin:
     va_start(args,err);
     SQChar *b=sq_getscratchpad(v,n);
-    SQInteger r=scvsprintf(b,n,err,args);
+    SQInteger r=scvsprintf(b,sqstd_narrow<size_t>(n),err,args);
     va_end(args);
     if (r>=n) {
         n=r+1;//required+null

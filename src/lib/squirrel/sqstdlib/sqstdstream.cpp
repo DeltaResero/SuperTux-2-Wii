@@ -8,6 +8,7 @@
 #include <sqstdblob.h>
 #include "sqstdstream.h"
 #include "sqstdblobimpl.h"
+#include "sqstdnarrow.h"
 
 #define SETUP_STREAM(v) \
     SQStream *self = NULL; \
@@ -30,7 +31,7 @@ SQInteger _stream_readblob(HSQUIRRELVM v)
     if(res <= 0)
         return sq_throwerror(v,_SC("no data left to read"));
     blobp = sqstd_createblob(v,res);
-    memcpy(blobp,data,res);
+    memcpy(blobp,data,sqstd_narrow<size_t>(res));
     return 1;
 }
 

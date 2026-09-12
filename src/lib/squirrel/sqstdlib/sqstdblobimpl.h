@@ -2,6 +2,8 @@
 #ifndef _SQSTD_BLOBIMPL_H_
 #define _SQSTD_BLOBIMPL_H_
 
+#include "sqstdnarrow.h"
+
 struct SQBlob : public SQStream
 {
     SQBlob(const SQBlob &) = delete;
@@ -9,19 +11,19 @@ struct SQBlob : public SQStream
     SQBlob(SQInteger size) {
         _size = size;
         _allocated = size;
-        _buf = (unsigned char *)sq_malloc(size);
-        memset(_buf, 0, _size);
+        _buf = (unsigned char *)sq_malloc(sqstd_narrow<SQUnsignedInteger>(size));
+        memset(_buf, 0, sqstd_narrow<size_t>(_size));
         _ptr = 0;
         _owns = true;
     }
     virtual ~SQBlob() {
-        sq_free(_buf, _allocated);
+        sq_free(_buf, sqstd_narrow<SQUnsignedInteger>(_allocated));
     }
     SQInteger Write(void *buffer, SQInteger size) {
         if(!CanAdvance(size)) {
             GrowBufOf(_ptr + size - _size);
         }
-        memcpy(&_buf[_ptr], buffer, size);
+        memcpy(&_buf[_ptr], buffer, sqstd_narrow<size_t>(size));
         _ptr += size;
         return size;
     }
@@ -32,20 +34,20 @@ struct SQBlob : public SQStream
                 n = _size - _ptr;
             else return 0;
         }
-        memcpy(buffer, &_buf[_ptr], n);
+        memcpy(buffer, &_buf[_ptr], sqstd_narrow<size_t>(n));
         _ptr += n;
         return n;
     }
     bool Resize(SQInteger n) {
         if(!_owns) return false;
         if(n != _allocated) {
-            unsigned char *newbuf = (unsigned char *)sq_malloc(n);
-            memset(newbuf,0,n);
+            unsigned char *newbuf = (unsigned char *)sq_malloc(sqstd_narrow<SQUnsignedInteger>(n));
+            memset(newbuf,0,sqstd_narrow<size_t>(n));
             if(_size > n)
-                memcpy(newbuf,_buf,n);
+                memcpy(newbuf,_buf,sqstd_narrow<size_t>(n));
             else
-                memcpy(newbuf,_buf,_size);
-            sq_free(_buf,_allocated);
+                memcpy(newbuf,_buf,sqstd_narrow<size_t>(_size));
+            sq_free(_buf,sqstd_narrow<SQUnsignedInteger>(_allocated));
             _buf=newbuf;
             _allocated = n;
             if(_size > _allocated)

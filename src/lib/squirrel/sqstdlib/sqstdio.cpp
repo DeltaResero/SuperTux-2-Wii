@@ -4,6 +4,7 @@
 #include <squirrel.h>
 #include <sqstdio.h>
 #include "sqstdstream.h"
+#include "sqstdnarrow.h"
 
 #define SQSTD_FILE_TYPE_TAG ((SQUnsignedInteger)(SQSTD_STREAM_TYPE_TAG | 0x00000001))
 //basic API
@@ -18,13 +19,13 @@ SQFILE sqstd_fopen(const SQChar *filename ,const SQChar *mode)
 
 SQInteger sqstd_fread(void* buffer, SQInteger size, SQInteger count, SQFILE file)
 {
-    SQInteger ret = (SQInteger)fread(buffer,size,count,(FILE *)file);
+    SQInteger ret = (SQInteger)fread(buffer,sqstd_narrow<size_t>(size),sqstd_narrow<size_t>(count),(FILE *)file);
     return ret;
 }
 
 SQInteger sqstd_fwrite(const SQUserPointer buffer, SQInteger size, SQInteger count, SQFILE file)
 {
-    return (SQInteger)fwrite(buffer,size,count,(FILE *)file);
+    return (SQInteger)fwrite(buffer,sqstd_narrow<size_t>(size),sqstd_narrow<size_t>(count),(FILE *)file);
 }
 
 SQInteger sqstd_fseek(SQFILE file, SQInteger offset, SQInteger origin)

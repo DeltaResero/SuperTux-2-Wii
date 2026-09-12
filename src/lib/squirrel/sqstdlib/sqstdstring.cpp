@@ -1,6 +1,7 @@
 /* see copyright notice in squirrel.h */
 #include <squirrel.h>
 #include <sqstdstring.h>
+#include "sqstdnarrow.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,7 +11,7 @@
 
 #define MAX_FORMAT_LEN  20
 #define MAX_WFORMAT_LEN 3
-#define ADDITIONAL_FORMAT_SPACE (100*sizeof(SQChar))
+#define ADDITIONAL_FORMAT_SPACE (100*SQ_CHAR_SIZE)
 
 static SQUserPointer rex_typetag = NULL;
 
@@ -62,7 +63,7 @@ static SQInteger validate_format(HSQUIRRELVM v, SQChar *fmt, const SQChar *src, 
     }
     if (n-start > MAX_FORMAT_LEN )
         return sq_throwerror(v,_SC("format too long"));
-    memcpy(&fmt[1],&src[start],((n-start)+1)*sizeof(SQChar));
+    memcpy(&fmt[1],&src[start],sqstd_narrow<size_t>((n-start)+1)*sizeof(SQChar));
     fmt[(n-start)+2] = '\0';
     return n;
 }
@@ -79,7 +80,7 @@ SQRESULT sqstd_format(HSQUIRRELVM v,SQInteger nformatstringidx,SQInteger *outlen
         return res; // propagate the error
     }
     SQInteger format_size = sq_getsize(v,nformatstringidx);
-    SQInteger allocated = (format_size+2)*sizeof(SQChar);
+    SQInteger allocated = (format_size+2)*SQ_CHAR_SIZE;
     dest = sq_getscratchpad(v,allocated);
     SQInteger n = 0,i = 0, nparam = nformatstringidx+1, w = 0;
     //while(format[n] != '\0')
@@ -109,14 +110,14 @@ SQRESULT sqstd_format(HSQUIRRELVM v,SQInteger nformatstringidx,SQInteger *outlen
             case 's':
                 if(SQ_FAILED(sq_getstring(v,nparam,&ts)))
                     return sq_throwerror(v,_SC("string expected for the specified format"));
-                addlen = (sq_getsize(v,nparam)*sizeof(SQChar))+((w+1)*sizeof(SQChar));
+                addlen = (sq_getsize(v,nparam)*SQ_CHAR_SIZE)+((w+1)*SQ_CHAR_SIZE);
                 valtype = 's';
                 break;
             case 'i': case 'd': case 'o': case 'u':  case 'x':  case 'X':
 #ifdef _SQ64
                 {
                 size_t flen = scstrlen(fmt);
-                SQInteger fpos = flen - 1;
+                SQInteger fpos = sqstd_narrow<SQInteger>(flen) - 1;
                 SQChar f = fmt[fpos];
                 const SQChar *prec = (const SQChar *)_PRINT_INT_PREC;
                 while(*prec != _SC('\0')) {
@@ -130,20 +131,20 @@ SQRESULT sqstd_format(HSQUIRRELVM v,SQInteger nformatstringidx,SQInteger *outlen
             case 'c':
                 if(SQ_FAILED(sq_getinteger(v,nparam,&ti)))
                     return sq_throwerror(v,_SC("integer expected for the specified format"));
-                addlen = (ADDITIONAL_FORMAT_SPACE)+((w+1)*sizeof(SQChar));
+                addlen = (ADDITIONAL_FORMAT_SPACE)+((w+1)*SQ_CHAR_SIZE);
                 valtype = 'i';
                 break;
             case 'f': case 'g': case 'G': case 'e':  case 'E':
                 if(SQ_FAILED(sq_getfloat(v,nparam,&tf)))
                     return sq_throwerror(v,_SC("float expected for the specified format"));
-                addlen = (ADDITIONAL_FORMAT_SPACE)+((w+1)*sizeof(SQChar));
+                addlen = (ADDITIONAL_FORMAT_SPACE)+((w+1)*SQ_CHAR_SIZE);
                 valtype = 'f';
                 break;
             default:
                 return sq_throwerror(v,_SC("invalid format"));
             }
             n++;
-            allocated += addlen + sizeof(SQChar);
+            allocated += addlen + SQ_CHAR_SIZE;
             dest = sq_getscratchpad(v,allocated);
             switch(valtype) {
             case 's': i += sqstd_formatvalue(&dest[i],allocated,fmt,ts); break;
@@ -166,7 +167,7 @@ void sqstd_pushstringf(HSQUIRRELVM v,const SQChar *s,...)
 begin:
     va_start(args,s);
     SQChar *b=sq_getscratchpad(v,n);
-    SQInteger r=scvsprintf(b,n,s,args);
+    SQInteger r=scvsprintf(b,sqstd_narrow<size_t>(n),s,args);
     va_end(args);
     if (r>=n) {
         n=r+1;//required+null
@@ -312,7 +313,7 @@ static SQInteger _string_escape(HSQUIRRELVM v)
     const SQInteger maxescsize = 4;
 #endif
     SQInteger destcharsize = (size * maxescsize); //assumes every char could be escaped
-    resstr = dest = (SQChar *)sq_getscratchpad(v,destcharsize * sizeof(SQChar));
+    resstr = dest = (SQChar *)sq_getscratchpad(v,destcharsize * SQ_CHAR_SIZE);
     SQChar c;
     SQChar escch;
     SQInteger escaped = 0;
@@ -344,7 +345,7 @@ static SQInteger _string_escape(HSQUIRRELVM v)
         }
         else {
 
-            dest += scsprintf(dest, destcharsize, ESCPAT, c);
+            dest += scsprintf(dest, sqstd_narrow<size_t>(destcharsize), ESCPAT, c);
             escaped++;
         }
     }
@@ -367,7 +368,7 @@ static SQInteger _string_startswith(HSQUIRRELVM v)
     SQInteger cmplen = sq_getsize(v,3);
     SQBool ret = SQFalse;
     if(cmplen <= len) {
-        ret = memcmp(str,cmp,sq_rsl(cmplen)) == 0 ? SQTrue : SQFalse;
+        ret = memcmp(str,cmp,sqstd_narrow<size_t>(sq_rsl(cmplen))) == 0 ? SQTrue : SQFalse;
     }
     sq_pushbool(v,ret);
     return 1;
@@ -382,7 +383,7 @@ static SQInteger _string_endswith(HSQUIRRELVM v)
     SQInteger cmplen = sq_getsize(v,3);
     SQBool ret = SQFalse;
     if(cmplen <= len) {
-        ret = memcmp(&str[len - cmplen],cmp,sq_rsl(cmplen)) == 0 ? SQTrue : SQFalse;
+        ret = memcmp(&str[len - cmplen],cmp,sqstd_narrow<size_t>(sq_rsl(cmplen))) == 0 ? SQTrue : SQFalse;
     }
     sq_pushbool(v,ret);
     return 1;
@@ -559,7 +560,7 @@ static SQInteger sqstd_formatvalue(SQChar *dest,SQInteger n,const SQChar *fmt,..
 {
     va_list args;
     va_start(args,fmt);
-    SQInteger r=scvsprintf(dest,n,fmt,args);
+    SQInteger r=scvsprintf(dest,sqstd_narrow<size_t>(n),fmt,args);
     va_end(args);
     return r;
 }

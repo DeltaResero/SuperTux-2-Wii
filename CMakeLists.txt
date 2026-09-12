@@ -428,10 +428,9 @@ target_compile_options(supertux2 PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 ## but that's all the flag can see. -Wsign-conversion lands on SQInteger going to
 ## an unsigned type. Squirrel returns -1 as a sentinel, so a plain cast would
 ## hide a real value.
-FOREACH(TGT squirrel sqstdlib)
-  TARGET_COMPILE_OPTIONS(${TGT} PRIVATE ${SUPERTUX2_WARNING_FLAGS}
-    -Wno-effc++ -Wno-sign-conversion)
-ENDFOREACH()
+TARGET_COMPILE_OPTIONS(squirrel PRIVATE ${SUPERTUX2_WARNING_FLAGS}
+  -Wno-effc++ -Wno-sign-conversion)
+TARGET_COMPILE_OPTIONS(sqstdlib PRIVATE ${SUPERTUX2_WARNING_FLAGS} -Wno-effc++)
 TARGET_COMPILE_OPTIONS(simplesquirrel PRIVATE ${SUPERTUX2_WARNING_FLAGS})
 
 IF(WIN32)

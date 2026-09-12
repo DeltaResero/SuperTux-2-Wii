@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <setjmp.h>
 #include <sqstdstring.h>
+#include "sqstdnarrow.h"
 
 #ifdef _DEBUG
 #include <stdio.h>
@@ -80,7 +81,7 @@ static SQInteger sqstd_rex_newnode(SQRex *exp, SQRexNodeType type)
     if(exp->_nallocated < (exp->_nsize + 1)) {
         SQInteger oldsize = exp->_nallocated;
         exp->_nallocated *= 2;
-        exp->_nodes = (SQRexNode *)sq_realloc(exp->_nodes, oldsize * sizeof(SQRexNode) ,exp->_nallocated * sizeof(SQRexNode));
+        exp->_nodes = (SQRexNode *)sq_realloc(exp->_nodes, sqstd_narrow<SQUnsignedInteger>(oldsize) * sizeof(SQRexNode) ,sqstd_narrow<SQUnsignedInteger>(exp->_nallocated) * sizeof(SQRexNode));
     }
     exp->_nodes[exp->_nsize++] = n;
     SQInteger newid = exp->_nsize - 1;
@@ -557,8 +558,8 @@ SQRex *sqstd_rex_compile(const SQChar *pattern,const SQChar **error)
     SQRex * volatile exp = (SQRex *)sq_malloc(sizeof(SQRex)); // "volatile" is needed for setjmp()
     exp->_eol = exp->_bol = NULL;
     exp->_p = pattern;
-    exp->_nallocated = (SQInteger)scstrlen(pattern) * sizeof(SQChar);
-    exp->_nodes = (SQRexNode *)sq_malloc(exp->_nallocated * sizeof(SQRexNode));
+    exp->_nallocated = sqstd_narrow<SQInteger>(scstrlen(pattern) * sizeof(SQChar));
+    exp->_nodes = (SQRexNode *)sq_malloc(sqstd_narrow<SQUnsignedInteger>(exp->_nallocated) * sizeof(SQRexNode));
     exp->_nsize = 0;
     exp->_matches = 0;
     exp->_nsubexpr = 0;
@@ -587,8 +588,8 @@ SQRex *sqstd_rex_compile(const SQChar *pattern,const SQChar **error)
             scprintf(_SC("\n"));
         }
 #endif
-        exp->_matches = (SQRexMatch *) sq_malloc(exp->_nsubexpr * sizeof(SQRexMatch));
-        memset(exp->_matches,0,exp->_nsubexpr * sizeof(SQRexMatch));
+        exp->_matches = (SQRexMatch *) sq_malloc(sqstd_narrow<SQUnsignedInteger>(exp->_nsubexpr) * sizeof(SQRexMatch));
+        memset(exp->_matches,0,sqstd_narrow<size_t>(exp->_nsubexpr) * sizeof(SQRexMatch));
     }
     else{
         sqstd_rex_free(exp);
@@ -600,9 +601,9 @@ SQRex *sqstd_rex_compile(const SQChar *pattern,const SQChar **error)
 void sqstd_rex_free(SQRex *exp)
 {
     if(exp) {
-        if(exp->_nodes) sq_free(exp->_nodes,exp->_nallocated * sizeof(SQRexNode));
+        if(exp->_nodes) sq_free(exp->_nodes,sqstd_narrow<SQUnsignedInteger>(exp->_nallocated) * sizeof(SQRexNode));
         if(exp->_jmpbuf) sq_free(exp->_jmpbuf,sizeof(jmp_buf));
-        if(exp->_matches) sq_free(exp->_matches,exp->_nsubexpr * sizeof(SQRexMatch));
+        if(exp->_matches) sq_free(exp->_matches,sqstd_narrow<SQUnsignedInteger>(exp->_nsubexpr) * sizeof(SQRexMatch));
         sq_free(exp,sizeof(SQRex));
     }
 }
